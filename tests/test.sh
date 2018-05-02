@@ -3,6 +3,7 @@
 
 
 test_missions() {
+testing_error=0
     for FOLDER in $(ls $PROGRAM_PATH_MISSIONS ); do
 
         MISSION_FOLDER=$(echo $FOLDER )
@@ -36,10 +37,11 @@ test_missions() {
 
                     if [[ "$task_status" == "ok" ]] || [[ "$task_status" = *"OK"* ]] || [[ "$task_status" == "0" ]]; then
                         task_testing_status="${GREEN}ok${NORMAL}"
-                        return 0
+                        #return 0
                     else
                         task_testing_status="${RED}failed${NORMAL}"
-                        return 1
+                        #return 1
+                        testing_error=1
                     fi
 
                     echo -e "\t\tTask solvable: $task_testing_status"
@@ -51,7 +53,7 @@ test_missions() {
 
         echo ""
     done
-
+return $testing_error
 }
 
 
