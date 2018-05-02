@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 #
-test='if [ -e "/usr/sbin/apache2" ]; then
-echo "ok" return 0;
-else echo "fail" return 1;
-fi'
-#eval $test
-
 
 #We use http://ipecho.net/ for descovering the external ip of your server
 #requirement
@@ -39,17 +33,29 @@ MISSIONS_FILENAME_META="meta.ini"
 #
 #
 # @noargs
-setup (){
+setup() {
 
 PROGRAM_FILENAME="$(echo ${0##*/})"
 PROGRAM_PATH_FULL="$(readlink -f "$PROGRAM_FILENAME")"
 PROGRAM_PATH_WORKDIR="$(echo ${0%/*})"
 #echo $PROGRAM_PATH_WORKDIR
 PROGRAM_PATH_MISSIONS="$PROGRAM_PATH_WORKDIR/$FOLDER_MISSIONS"
-#echo $PROGRAM_PATH_MISSIONS
+PLAYER_FILE="$PROGRAM_PATH_WORKDIR/player/player.ini"
 }
 
-get_missions(){
+# @description
+#
+# @example
+#
+#
+#
+# @arg $1
+#
+# @noargs
+#
+#
+# @stdout Path to something.
+get_missions() {
 
 #gets all missions
 for FOLDER in $(ls $PROGRAM_PATH_MISSIONS ); do
@@ -77,6 +83,74 @@ done
 }
 
 
+# @description
+#
+# @example
+#
+#
+#
+# @arg $1
+#
+# @noargs
+#
+#
+# @stdout Path to something.
+get_mission_path() {
+
+    local MISSION_NAME=$1
+
+    for FOLDER in $(ls $PROGRAM_PATH_MISSIONS ); do
+
+        MISSION_FOLDER=$(echo $FOLDER )
+        MISSION_PATH=$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER
+
+
+        mission_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
+
+
+        if [[ "$mission_title" == "$MISSION_NAME" ]];then
+            MISSION_PATH="$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER"
+        return 0
+        #echo -e "MISSION: $mission_title"
+        fi
+     done
+
+return 1
+}
+
+# @description
+#
+# @example
+#
+#
+#
+# @arg $1
+#
+# @noargs
+#
+#
+# @stdout Path to something.
+list_all_missions() {
+    local counter=1
+
+    echo ""
+    echo "Missions:"
+    echo ""
+    for FOLDER in $(ls $PROGRAM_PATH_MISSIONS ); do
+
+        MISSION_FOLDER=$(echo $FOLDER )
+        MISSION_PATH=$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER
+
+
+        mission_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
+        echo -e "\t$counter $mission_title"
+        let "counter++"
+     done
+}
+
+
+
+
 
 
 
@@ -86,15 +160,18 @@ done
 # @example
 #   show_tasks mission_current
 #
-# @arg $1 string mission (Not implemented!)
+# @arg $1 string mission
 #
 # @noargs
 #
 # @stdout Full mission info. Title + Tasks
 #
-show_tasks(){
+show_tasks() {
     # Get a fresh array of all tasks in $TASK_LIST_OF_TASK
-    get_all_tasks
+
+    MISSION_FOLDER=$1
+
+    get_all_tasks $MISSION_FOLDER
 
 
     mission_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
@@ -102,6 +179,7 @@ show_tasks(){
     echo "Mission: $mission_title"
     echo ""
     echo "Your Tasks:"
+    echo ""
     #Show for each task
     for task in "${TASK_LIST_OF_TASK[@]}"
     do
@@ -126,8 +204,19 @@ show_tasks(){
 
 }
 
-
-check_success(){
+# @description
+#
+# @example
+#
+#
+#
+# @arg $1
+#
+# @noargs
+#
+#
+# @stdout Path to something.
+check_success() {
     check_task=$1
     cmd="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$check_task" "cmd")"
     task_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$check_task" "title")"
@@ -152,27 +241,103 @@ check_success(){
 
 }
 
+# @description Returns current mission from player.ini. Returns MISSION_CURRENT
+#
+# @example
+#   get_all_tasks $(get_current_mission)
+#
+# @noargs
+get_current_mission() {
+    MISSION_CURRENT="$(crudini --get "$PLAYER_FILE" "player" "mission_current")"
+    echo $MISSION_CURRENT
+}
 
-#get all tasks from ini
-get_all_tasks(){
+# @description Writes current mission to player.ini. Writes foldername of mission.
+#
+# @example
+#   set_current_mission 1
+#
+# @arg $1 int Mission number. Output of `ls` stating at 1
+set_current_mission() {
+
+    local MISSION_NUMBER="$1"
+    local counter=1
+
+    for FOLDER in $(ls $PROGRAM_PATH_MISSIONS ); do
+
+        if [[ "$MISSION_NUMBER" == "$counter"  ]];then
+                crudini --set "$PLAYER_FILE" "player" "mission_current" "$FOLDER"
+         return 0
+        fi
+
+        let "counter++"
+     done
+return 1
+}
+
+
+# @description Receives mission number from terminal input. Returns Mission number
+#
+# @example
+#   input_mission_number
+#   "Please select a mission [Input number]"
+#   n
+#   "Numbers only"
+#   1
+#
+# @noargs
+input_mission_number() {
+
+    echo -e "Please select a mission [Input number]: "
+
+    read MISSION_CURRENT_NUMBER
+        while [[ $x -lt 0 || $x -gt 9999 ]]; do
+            echo "Numbers only"
+            read MISSION_CURRENT_NUMBER
+        done
+    return $MISSION_CURRENT_NUMBER
+}
+
+
+
+# @description Fills array TASK_LIST_OF_TASK with names of all tasks of current mission.
+#
+# @example
+#   get_all_tasks 1
+#
+# @ int Mission number. Output of `ls` stating at 1
+#
+get_all_tasks() {
+
+    MISSION_FOLDER=$1
+
+    MISSION_PATH=$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER
+
     tasks="$(eval crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" | tr '\n' ' ')"
 
     IFS=' ' read -r -a TASK_LIST_OF_TASK <<< "$tasks"
 
-    #echo "ausgabe list_of_tasks:"
-
-    #for task in "${list_of_tasks[@]}"
-    #do
-    #    echo "$task"
-    #done
-
     return 0
 }
 
+# @description Checks
+#
+# @example
+#
+#
+#
+# @arg $1
+#
+# @noargs
+#
+#
+# @stdout Path to something.
+check_result() {
 
-check_result(){
+    #get_current_mission
+
     # Get a fresh array of all tasks in $TASK_LIST_OF_TASK
-    get_all_tasks
+    get_all_tasks $(get_current_mission)
 
 
     mission_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
@@ -224,6 +389,15 @@ check_result(){
 }
 
 
+
+
+setup
+
+
+
+
+
+
 if [ "$1" == "check" ]; then
     check_result
     exit 0
@@ -246,12 +420,12 @@ if [ "$1" == "testing" ]; then
 fi
 
 if [ "$1" == "show" ]; then
-    get_missions
-    show_tasks
+    MISSION_FOLDER="$(crudini --get "$PLAYER_FILE" "player" "mission_current")"
+    show_tasks $MISSION_FOLDER
     exit 0
 fi
 
-if [ "$1" == "mission" ]; then
-    get_missions
+if [ "$1" == "list" ]; then
+    list_all_missions
     exit 0
 fi
