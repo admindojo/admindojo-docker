@@ -31,7 +31,9 @@ testing_error=0
 
 
                     # Run cmd to solve task
-                    eval "$task_testing_cmd 1>/dev/null"
+                    #eval "$task_testing_cmd 1>/dev/null"
+                    testing_command_error=$(eval "$task_testing_cmd 1>/dev/null"; echo $?)
+
 
                     task_status=$(check_success "$task"; echo $?)
 
@@ -51,8 +53,12 @@ testing_error=0
 
             done
          if [[ "$testing_error" == "1" ]]; then
-            echo -e "${RED}Error in Module: $MISSION_PATH${NORMAL}"
+            echo -e "${RED}Solved Check failed: $MISSION_PATH${NORMAL}"
          fi
+         if [[ "$testing_command_error" != "0" ]]; then
+            echo -e "${RED}Testing command failed: $MISSION_PATH${NORMAL}"
+         fi
+
 
         echo ""
     done
