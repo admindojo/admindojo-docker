@@ -230,6 +230,7 @@ if [ "$1" == "check" ]; then
 fi
 
 if [ "$1" == "testing" ]; then
+    set -e
     echo ""
     echo "Start testing"
     setup
@@ -239,7 +240,7 @@ if [ "$1" == "testing" ]; then
 fi
 
 if [ "$1" == "show" ]; then
-get_missions
+    get_missions
     show_tasks
     exit 0
 fi
