@@ -417,6 +417,8 @@ if [ "$1" == "testing" ]; then
     echo ""
     echo "------------------   TEST END    ------------------"
     echo ""
+
+    exit $?
 fi
 
 if [ "$1" == "show" ]; then
