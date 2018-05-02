@@ -34,7 +34,6 @@ testing_error=0
                     #eval "$task_testing_cmd 1>/dev/null"
                     testing_command_error=$(eval "$task_testing_cmd 1>/dev/null"; echo $?)
 
-
                     task_status=$(check_success "$task"; echo $?)
 
                     if [[ "$task_status" == "ok" ]] || [[ "$task_status" = *"OK"* ]] || [[ "$task_status" == "0" ]]; then
@@ -46,7 +45,14 @@ testing_error=0
                         testing_error=1
                     fi
 
-                    echo -e "\t\tTask solvable: $task_testing_status"
+                    if [[ "$testing_command_error" != "0" ]]; then
+                        $task_testingcmd_status="${GREEN}ok${NORMAL}"
+                    else
+                        $task_testingcmd_status="${RED}failed${NORMAL}"
+                    fi
+
+                    echo -e "\t\tTest command: $task_testingcmd_status"
+                    echo -e "\t\tTask solved : $task_testing_status"
 
 
                 fi
