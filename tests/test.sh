@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 #
 
-
+# Test each mission
+# Test only tasks that contain "test" commands
 test_missions() {
+# marker for failed tests
 testing_error=0
+
     for FOLDER in $(ls $PROGRAM_PATH_MISSIONS ); do
 
         MISSION_FOLDER=$(echo $FOLDER )
-        #echo $MISSION_FOLDER
-        #Get mission meta
-        #"$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
         MISSION_PATH=$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER
 
 
         mission_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
         echo -e "TEST MISSION: $mission_title"
-        echo -e "path: $MISSION_PATH"
+
         get_all_tasks
 
 
@@ -50,6 +50,9 @@ testing_error=0
                 fi
 
             done
+         if [[ "$testing_error" == "1" ]]; then
+            echo -e "${RED}Error in Module: $MISSION_PATH${NORMAL}"
+         fi
 
         echo ""
     done

@@ -9,7 +9,5 @@ install_requirements() {
     echo "Requirements installed"
 
     echo ""
-    return 0
-
 }
 install_requirements

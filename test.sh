@@ -233,8 +233,10 @@ if [ "$1" == "testing" ]; then
 #    set -e
     echo ""
     echo "Start testing"
+    echo ""
+    echo "setup start"
     setup
-    echo "workdir: $PROGRAM_PATH_WORKDIR"
+    echo "setup done"
     source $PROGRAM_PATH_WORKDIR/tests/requirements.sh
     source $PROGRAM_PATH_WORKDIR/tests/test.sh
 fi
