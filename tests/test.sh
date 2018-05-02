@@ -12,13 +12,13 @@ task_solved_status=0
     for FOLDER in $(ls $PROGRAM_PATH_MISSIONS ); do
 
         MISSION_FOLDER=$(echo $FOLDER )
-        MISSION_PATH=$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER
+        MISSION_PATH="$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER"
 
 
         mission_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
         echo -e "TEST MISSION: $mission_title"
 
-        get_all_tasks
+        get_all_tasks $FOLDER
 
 
             for task in "${TASK_LIST_OF_TASK[@]}"
