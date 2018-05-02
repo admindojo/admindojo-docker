@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 #
+set -e
 
 test_missions() {
     for FOLDER in $(ls $PROGRAM_PATH_MISSIONS ); do
@@ -55,5 +56,3 @@ test_missions() {
 
 
 test_missions
-
-echo $?

@@ -234,9 +234,8 @@ if [ "$1" == "testing" ]; then
     echo "Start testing"
     setup
     echo "workdir: $PROGRAM_PATH_WORKDIR"
-    #source $PROGRAM_PATH_WORKDIR/tests/requirements.sh
+    source $PROGRAM_PATH_WORKDIR/tests/requirements.sh
     source $PROGRAM_PATH_WORKDIR/tests/test.sh
-    exit 0
 fi
 
 if [ "$1" == "show" ]; then
