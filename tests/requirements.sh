@@ -14,4 +14,8 @@ install_requirements() {
     echo "------------------   INSTALL REQUIREMENTS DONE   ------------------"
     echo ""
 }
+
+
+
+
 install_requirements
