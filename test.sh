@@ -232,13 +232,16 @@ fi
 if [ "$1" == "testing" ]; then
 #    set -e
     echo ""
-    echo "Start testing"
+    echo "------------------   TEST START   ------------------"
     echo ""
-    echo "setup start"
+    echo "------------------   SETUP START  ------------------"
     setup
-    echo "setup done"
+    echo "------------------   SETUP DONE   ------------------"
     source $PROGRAM_PATH_WORKDIR/tests/requirements.sh
     source $PROGRAM_PATH_WORKDIR/tests/test.sh
+    echo ""
+    echo "------------------   TEST END    ------------------"
+    echo ""
 fi
 
 if [ "$1" == "show" ]; then

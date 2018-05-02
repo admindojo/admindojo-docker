@@ -2,13 +2,14 @@
 
 install_requirements() {
     echo ""
-    echo "Install testing requirements"
+    echo "------------------   INSTALL REQUIREMENTS START   ------------------"
+    echo ""
 
     sudo apt-get -qq update
     sudo apt-get install -y crudini
 
-    echo "Requirements installed"
-
+    echo ""
+    echo "------------------   INSTALL REQUIREMENTS DONE   ------------------"
     echo ""
 }
 install_requirements

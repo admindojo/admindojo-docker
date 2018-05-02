@@ -6,6 +6,8 @@
 test_missions() {
 # marker for failed tests
 testing_error=0
+task_testingcmd_status=0
+task_solved_status=0
 
     for FOLDER in $(ls $PROGRAM_PATH_MISSIONS ); do
 
@@ -43,6 +45,7 @@ testing_error=0
                         task_testing_status="${RED}failed${NORMAL}"
                         #return 1
                         testing_error=1
+                        task_solved_status=1
                     fi
 
                     if [[ "$testing_command_error" == "0" ]]; then
@@ -59,7 +62,7 @@ testing_error=0
                 fi
 
             done
-         if [[ "$testing_error" == "1" ]]; then
+         if [[ "$task_solved_status" == "1" ]]; then
             echo -e "${RED}Solved Check failed: $MISSION_PATH${NORMAL}"
          fi
          if [[ "$testing_command_error" != "0" ]]; then
@@ -72,6 +75,7 @@ testing_error=0
 return $testing_error
 }
 
-echo "------------------   TEST START   ----------------"
+echo "------------------   TEST MISSIONS START  ------------------"
 test_missions
 return $testing_error
+echo "------------------   TEST MISSIONS DONE  ------------------"
