@@ -46,9 +46,10 @@ testing_error=0
                     fi
 
                     if [[ "$testing_command_error" != "0" ]]; then
-                        $task_testingcmd_status="${GREEN}ok${NORMAL}"
+                        task_testingcmd_status="${GREEN}ok${NORMAL}"
                     else
-                        $task_testingcmd_status="${RED}failed${NORMAL}"
+                        task_testingcmd_status="${RED}failed${NORMAL}"
+                        testing_error=1
                     fi
 
                     echo -e "\t\tTest command: $task_testingcmd_status"
