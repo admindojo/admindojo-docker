@@ -230,7 +230,8 @@ if [ "$1" == "check" ]; then
 fi
 
 if [ "$1" == "testing" ]; then
-#    set -e
+    set -e # Exit with nonzero exit code if anything fails
+
     echo ""
     echo "------------------   TEST START   ------------------"
     echo ""
