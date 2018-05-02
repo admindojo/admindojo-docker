@@ -3,8 +3,8 @@
 install_requirements() {
     echo "Install testing requirements"
     echo ""
-    apt-get update
-    apt-get install crudini
+    sudo apt-get -qq update
+    sudo apt-get install -y crudini
 
     echo "Requirements installed"
 
