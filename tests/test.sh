@@ -45,7 +45,7 @@ testing_error=0
                         testing_error=1
                     fi
 
-                    if [[ "$testing_command_error" != "0" ]]; then
+                    if [[ "$testing_command_error" == "0" ]]; then
                         task_testingcmd_status="${GREEN}ok${NORMAL}"
                     else
                         task_testingcmd_status="${RED}failed${NORMAL}"
@@ -72,5 +72,6 @@ testing_error=0
 return $testing_error
 }
 
-
+echo "------------------   TEST START   ----------------"
 test_missions
+return $testing_error

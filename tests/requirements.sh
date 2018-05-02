@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 install_requirements() {
-    echo "Install testing requirements"
     echo ""
+    echo "Install testing requirements"
+
     sudo apt-get -qq update
     sudo apt-get install -y crudini
 
