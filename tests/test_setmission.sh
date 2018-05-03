@@ -2,7 +2,7 @@
 set -e # Exit with nonzero exit code if anything fails
 
 rm -rf "./missions/*"
-mv "test_testmission-allwaysok_test" "./missions/"
+mv "./tests/test_testmission-allwaysok_test" "./missions/"
 
 ./helper.sh input 1
 

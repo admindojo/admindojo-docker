@@ -396,7 +396,7 @@ if [ "$1" == "testing" ]; then
     echo "------------------   TEST START   ------------------"
     echo ""
     echo "------------------   SETUP START  ------------------"
-    #setup
+    setup
     echo "------------------   SETUP DONE   ------------------"
     source $PROGRAM_PATH_WORKDIR/tests/requirements.sh
     source $PROGRAM_PATH_WORKDIR/tests/test.sh
@@ -420,5 +420,3 @@ if [ "$1" == "reset" ]; then
     mission_reset
     exit 0
 fi
-
-exit 0

@@ -11,6 +11,9 @@ You'll get missions and tasks to solve and hints on how to solve the mission.
 Requirements:
 - Ubuntu
 - sudo
+- fresh VM
+
+Note: Please use this game on a fresh VM, that you can delete later, only. You'll modify the system.
 
 ```sh
 git clone https://github.com/6uhrmittag/linux-admin-game.git

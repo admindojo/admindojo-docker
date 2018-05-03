@@ -2,8 +2,4 @@ language: bash
 sudo: required
 
 script:
-    - bash ./game.sh
-    - bash ./tests/requirements.sh
-    - bash ./tests/test_missions.sh
-    - bash ../helper.sh input 1
-    - bash ./tests/test_setmission.sh
+    - bash ./game.sh testing
