@@ -58,9 +58,9 @@ get_missions() {
       #Get mission meta
       #"$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
         MISSION_PATH="$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER"
-        MISSION_type="$(echo $MISSION_FOLDER | cut -d '_' -f1)"
-        MISSION_name="$(echo $MISSION_FOLDER | cut -d '_' -f2)"
-        MISSION_keyword="$(echo $MISSION_FOLDER | cut -d '_' -f3)"
+        MISSION_type="$(echo "$MISSION_FOLDER" | cut -d '_' -f1)"
+        MISSION_name="$(echo "$MISSION_FOLDER" | cut -d '_' -f2)"
+        MISSION_keyword="$(echo "$MISSION_FOLDER" | cut -d '_' -f3)"
         #echo "---"
         #echo $MISSION_FOLDER
         #echo $MISSION_PATH
@@ -86,7 +86,7 @@ get_mission_path() {
 
     local MISSION_NAME=$1
 
-    for FOLDER in $(ls $PROGRAM_PATH_MISSIONS ); do
+    for FOLDER in $(ls "$PROGRAM_PATH_MISSIONS" ); do
 
         MISSION_FOLDER="$FOLDER"
         MISSION_PATH="$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER"
@@ -120,7 +120,7 @@ list_all_missions() {
     echo ""
     echo "Missions:"
     echo ""
-    for FOLDER in $(ls $PROGRAM_PATH_MISSIONS ); do
+    for FOLDER in $(ls "$PROGRAM_PATH_MISSIONS" ); do
 
         MISSION_FOLDER="$FOLDER"
         MISSION_PATH="$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER"
