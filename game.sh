@@ -15,12 +15,10 @@ GREEN="$(printf '\033[1;32m')"
 NORMAL="$(printf '\033[0m')"
 
 
-# @description Multiline description goes here and
+# @description Setup. Sets up common variables with paths and filenames
 # there
 #
-# @example
-#   some:other:func a b c
-#   echo 123
+# @example setup
 #
 #
 # @noargs
@@ -37,18 +35,13 @@ setup() {
     PLAYER_FILE="$PROGRAM_PATH_WORKDIR/player/player.ini"
 }
 
-# @description
+# @description Gets meta info for each mission. UNUSED
 #
 # @example
 #
-#
-#
-# @arg $1
+
 #
 # @noargs
-#
-#
-# @stdout Path to something.
 get_missions() {
     #gets all missions
     for FOLDER in $(ls "$PROGRAM_PATH_MISSIONS" ); do
@@ -70,18 +63,14 @@ get_missions() {
     done
 }
 
-# @description
+# @description Fills $MISSION_PATH with full path to mission name UNUSED
 #
 # @example
 #
 #
 #
-# @arg $1
+# @arg $1 string mission-name
 #
-# @noargs
-#
-#
-# @stdout Path to something.
 get_mission_path() {
 
     local MISSION_NAME=$1
@@ -102,18 +91,15 @@ get_mission_path() {
 return 1
 }
 
-# @description
+# @description Outputs all missions with counter(mission number)
 #
 # @example
 #
 #
-#
-# @arg $1
-#
 # @noargs
 #
 #
-# @stdout Path to something.
+# @stdout 1 Install and run apache webserver
 list_all_missions() {
     local counter=1
 
@@ -132,8 +118,7 @@ list_all_missions() {
      done
 }
 
-# @description Outputs full info for the current mission.
-# Currently outputs last mission. not current mission
+# @description Outputs full info of mission
 #
 # @example
 #   show_tasks mission_current
@@ -184,7 +169,13 @@ show_tasks() {
     echo ""
 }
 
+# @description Resets solved-status of current mission+all tasks of mission.
+#
+# @example mission_reset
+#
 
+# @noargs
+#
 mission_reset() {
     # Get a fresh array of all tasks in $TASK_LIST_OF_TASK
     get_all_tasks "$(get_current_mission)"
@@ -192,7 +183,8 @@ mission_reset() {
     #Check each task
     for task in "${TASK_LIST_OF_TASK[@]}"
     do
-        task_solved="$(crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "solved" "false")"
+        crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "solved" "false"
+        crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "solved" "false"
     done
 
 }
@@ -200,18 +192,15 @@ mission_reset() {
 
 
 
-# @description
+# @description Checks task status with help of "cmd" command in task.ini.
 #
-# @example
+# @example check_success task1
 #
+# @exitcode 0 Task solved
+# @exitcode 1 Task unsolved
+
+# @arg $1 task
 #
-#
-# @arg $1
-#
-# @noargs
-#
-#
-# @stdout Path to something.
 check_success() {
     check_task="$1"
     cmd="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$check_task" "cmd")"
@@ -237,20 +226,9 @@ check_success() {
 
 }
 
-
-mark_task_solved() {
-    task="$1"
-
-    get_mission_path $(get_current_mission)
-
-    crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "solved" "true"
-
-}
-
-# @description Returns current mission from player.ini. Returns MISSION_CURRENT
+# @description Returns current mission from player.ini. Returns $MISSION_CURRENT
 #
-# @example
-#   get_all_tasks $(get_current_mission)
+# @example get_all_tasks $(get_current_mission)
 #
 # @noargs
 get_current_mission() {
@@ -303,7 +281,7 @@ input_mission_number() {
     return "$MISSION_CURRENT_NUMBER"
 }
 
-# @description Fills array TASK_LIST_OF_TASK with names of all tasks of current mission.
+# @description Fills array $TASK_LIST_OF_TASK with names of all tasks of current mission.
 #
 # @example
 #   get_all_tasks 1
@@ -328,13 +306,10 @@ get_all_tasks() {
 # @example
 #
 #
-#
-# @arg $1
-#
 # @noargs
 #
 #
-# @stdout Path to something.
+# @stdout Full mission status
 check_result() {
 
     #get_current_mission

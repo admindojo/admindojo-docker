@@ -6,7 +6,18 @@ setup
 
 
 
-
+# @description
+#
+# @example
+#
+#
+#
+# @arg $1
+#
+# @noargs
+#
+#
+# @stdout Path to something.
 input() {
     list_all_missions
 
@@ -28,7 +39,18 @@ input() {
 
 
 
-
+# @description
+#
+# @example
+#
+#
+#
+# @arg $1
+#
+# @noargs
+#
+#
+# @stdout Path to something.
 check_live() {
     # Get a fresh array of all tasks in $TASK_LIST_OF_TASK
     get_all_tasks "$(get_current_mission)"
