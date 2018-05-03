@@ -1,5 +1,5 @@
 # linux admin game
-> Learn linux while solving interactive tutorials.
+> Learn linux while solving interactive sysadmin missions!
 
 [![Build Status](https://travis-ci.org/6uhrmittag/linux-admin-tutor.svg?branch=master)](https://travis-ci.org/6uhrmittag/linux-admin-tutor)
 
