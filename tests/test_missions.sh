@@ -73,6 +73,10 @@ task_solved_status=0
 return $testing_error
 }
 
+echo "------------------   TEST MISSIONS START  ------------------"
+
 test_missions
+
+echo "------------------   TEST MISSIONS DONE  ------------------"
 
 exit $?

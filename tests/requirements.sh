@@ -14,10 +14,11 @@ install_requirements() {
     echo ""
     echo "------------------   INSTALL REQUIREMENTS DONE   ------------------"
     echo ""
+
+    return $?
 }
 
 
 
 
 install_requirements
-exit $?

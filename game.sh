@@ -396,15 +396,13 @@ if [ "$1" == "testing" ]; then
     echo "------------------   TEST START   ------------------"
     echo ""
     echo "------------------   SETUP START  ------------------"
-    setup
+    #setup
     echo "------------------   SETUP DONE   ------------------"
     source $PROGRAM_PATH_WORKDIR/tests/requirements.sh
     source $PROGRAM_PATH_WORKDIR/tests/test.sh
     echo ""
     echo "------------------   TEST END    ------------------"
     echo ""
-
-    exit $?
 fi
 
 if [ "$1" == "show" ]; then
