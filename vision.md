@@ -20,9 +20,6 @@ if ! do_something; then
 fi
 ```
 
-- comments to function + documentation
-https://github.com/reconquest/shdoc
-
 # Program
 (=needed function)
 ## Story
@@ -83,11 +80,17 @@ status = (mandatory) ( solved | unsolved ) current task status
 example:
 ```
 [task4]
-title = Apache Webserver is running
-desc=Make sure the webserver is running
-cmd=service apache2 status 1>/dev/null;echo $?
-points=1
-hint=run apache2ctl
+title = Install apache webserver
+desc= Install apache webserver with apt get
+why = 
+cmd = (mandatory) A series of bash commands to check wether this task is solved or not.
+       Must returne/echo 0, "ok" or "OK" when solved
+       Can be multiline according to the ini-format. Use <tab> to indent multiline commands.
+points = (mandatory) ( 1 | 2 | 3 ) Points for this task based on difficulty easy | mid | hard
+hint = (optional) run apache2ctl
+test = (optional) A series of bash commands to solve this task. This is used to auto-test the mission.
+        A filename for a seperate script in the /tests directory is ok too.
+status = (mandatory) ( solved | unsolved ) current task status
 ```
 ### meta.ini
 ```

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ./tutor.sh
+source game.sh
 
 #TEST USER INPUT
 list_all_missions

@@ -1,9 +1,9 @@
-# linux admin tutor
+# linux admin game
 > Learn linux while solving interactive tutorials.
 
 [![Build Status](https://travis-ci.org/6uhrmittag/linux-admin-tutor.svg?branch=master)](https://travis-ci.org/6uhrmittag/linux-admin-tutor)
 
-Linux admin tutor is a tool to learn how to solve linux admin tasks like installing an webserver. You'll get tasks, hints 
+Linux admin game is a game to learn how to solve linux admin tasks like installing an webserver. You'll get tasks, hints 
 on how to solve your mission and points for every solved task.
 
 ## Installation
@@ -13,10 +13,10 @@ Requirements:
 - sudo
 
 ```sh
-git clone https://github.com/6uhrmittag/linux-admin-tutor.git
-cd linux-admin-tutor
+git clone https://github.com/6uhrmittag/linux-admin-game.git
+cd linux-admin-game
 sudo ./setup.sh
-./tutor.sh list
+./game.sh list
 ```
 
 ## Usage example
@@ -25,7 +25,7 @@ sudo ./setup.sh
 
 ## Development setup
 
-To run a test for all missions run `./tutor.sh testing`. 
+To run a test for all missions run `./game.sh testing`. 
 Run this on a fresh VM/CI only. testing mode installs/executes all mission tasks.
 
 generate documentation:
