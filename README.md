@@ -25,12 +25,15 @@ sudo ./setup.sh
 
 ## Usage example
 Select your mission:
+
 ![Select your mission](./documentation/screenshot_input.png)
 
 View your tasks:
+
 ![View your tasks](./documentation/screenshot_tasks.png)
 
 Get your result:
+
 ![Get your result](./documentation/screenshot_result.png)
 
 
