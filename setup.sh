@@ -15,3 +15,5 @@ install_requirements() {
     echo ""
 }
 install_requirements
+
+exit $?

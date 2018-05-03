@@ -186,7 +186,7 @@ fi
 
 if [ "$1" == "input" ]; then
     input
-    exit 0
+    exit $?
 fi
 
 if [ "$1" == "start" ]; then

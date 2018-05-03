@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e # Exit with nonzero exit code if anything fails
 
 install_requirements() {
     echo ""
@@ -19,3 +20,4 @@ install_requirements() {
 
 
 install_requirements
+exit $?

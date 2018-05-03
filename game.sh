@@ -422,3 +422,5 @@ if [ "$1" == "reset" ]; then
     mission_reset
     exit 0
 fi
+
+exit 0
