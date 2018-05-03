@@ -65,6 +65,7 @@ check_live() {
     tasks_total=0
     tasks_done=0
     tasks_undone=0
+    task_done_in_run=0
 
     local task_counter=0
 
@@ -86,10 +87,11 @@ check_live() {
 
 
             if [ "$STATUS" == 0 ]; then
-                if [[ $tasks_done == "0" ]];then
+                if [[ "$task_done_in_run" == "0" ]];then
                     echo ""
                     echo -e "${GREEN}You just solved:${NORMAL}"
                 fi
+
                 #mark task as solved in mission-file
                 #mark_task_solved "$task"
                 crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "solved" "true"
@@ -103,6 +105,7 @@ check_live() {
                 result_points_got=$(( $result_points_got + $task_points ))
                 echo -e "${GREEN}\t\t$task_title! + $task_points Points${NORMAL}"
                 let "tasks_done++"
+                task_done_in_run=1
             fi
 
 
@@ -116,8 +119,9 @@ check_live() {
 
     done
 
-    echo ""
+    #
     if [[ "$tasks_done" == "$tasks_total" ]];then
+        echo ""
         echo "You solved all tasks!"
         echo ""
         echo "Mission complete"
@@ -128,17 +132,23 @@ check_live() {
         echo ""
         crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "solved" "true"
         echo "Mission marked as solved"
+        echo ""
+        echo "Hit [enter]"
+        echo ""
+        exit 0
     else
-        echo "Tasks done: $tasks_done/$tasks_total"
+        if [[ "$task_done_in_run" == "1" ]];then
+            echo "Tasks done: $tasks_done/$tasks_total"
+            echo ""
+            echo "Hit [enter]"
+            echo ""
+        fi
     fi
-    echo ""
+
     #echo "Tasks total: $tasks_total"
     #echo "Tasks done: $tasks_done"
     #echo "Tasks undone: $tasks_undone"
 }
-#
-
-
 
 
 
@@ -146,32 +156,24 @@ check_live() {
 #TEST BACKGRUND HELPER
 # Runs background when mission is started. Should check the task-status periodically. Notifies user when a task is completed.
 #
-helper_function(){
+background_helper(){
+    while [ true ]
+    do
+        #check every minute
+        sleep 60
+        check_live
 
-
-
-while [ true ]
-do
-    sleep 2
-    if [[ -d /home/marvin/check ]];then
-        echo "da"
-        exit 0
-    else
-        echo "nicht da"
-    fi
-done
+    #    if [[ -d /home/marvin/check ]];then
+    #        echo "da"
+    #        exit 0
+    #    else
+    #        echo "nicht da"
+    #    fi
+    done
 }
 
 
-##helper_function &
-## Storing the background process' PID.
-#bg_pid=$!
-#
-## Trapping SIGKILLs so we can send them back to $bg_pid.
-#trap "kill -15 $bg_pid" 2 15
-#
-#
-#echo "PID: $bg_pid"
+
 
 
 
@@ -187,6 +189,24 @@ if [ "$1" == "input" ]; then
     exit 0
 fi
 
+if [ "$1" == "start" ]; then
+    echo "Starting background helper"
+    echo "Helper checkes every minute for solved tasks"
+    echo ""
+    background_helper &
+    # Storing the background process' PID.
+    bg_pid=$!
+
+    # Trapping SIGKILLs so we can send them back to $bg_pid.
+    trap "kill -15 $bg_pid" 2 15
+
+    crudini --set "$PLAYER_FILE" "local" "helper_pid" "$bg_pid"
+    #echo "PID: $bg_pid"
+
+    #echo ""
+    show_tasks $(get_current_mission)
+
+fi
 
 
 #Thanks:
