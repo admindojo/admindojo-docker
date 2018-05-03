@@ -125,9 +125,9 @@ list_all_missions() {
         MISSION_FOLDER="$FOLDER"
         MISSION_PATH="$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER"
 
-
         mission_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
         echo -e "\t$counter $mission_title"
+
         let "counter++"
      done
 }
@@ -169,13 +169,36 @@ show_tasks() {
         echo -e "$task_title"
 
         if [ -n "$task_desc" ]; then
-            echo -e "\t$task_desc"
+            echo -e "\tDescription: $task_desc"
         fi
+
+        why="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "why")"
+        if [ -n "$why" ]; then
+            echo -e "\tWhy: $why"
+        fi
+
+
     done
 
     echo ""
     echo ""
 }
+
+
+mission_reset() {
+    # Get a fresh array of all tasks in $TASK_LIST_OF_TASK
+    get_all_tasks "$(get_current_mission)"
+
+    #Check each task
+    for task in "${TASK_LIST_OF_TASK[@]}"
+    do
+        task_solved="$(crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "solved" "false")"
+    done
+
+}
+
+
+
 
 # @description
 #
@@ -214,6 +237,16 @@ check_success() {
 
 }
 
+
+mark_task_solved() {
+    task="$1"
+
+    get_mission_path $(get_current_mission)
+
+    crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "solved" "true"
+
+}
+
 # @description Returns current mission from player.ini. Returns MISSION_CURRENT
 #
 # @example
@@ -222,7 +255,7 @@ check_success() {
 # @noargs
 get_current_mission() {
     MISSION_CURRENT="$(crudini --get "$PLAYER_FILE" "player" "mission_current")"
-    #echo "$MISSION_CURRENT"
+    echo "$MISSION_CURRENT"
 }
 
 # @description Writes current mission to player.ini. Writes foldername of mission.
@@ -360,6 +393,10 @@ check_result() {
     echo -e "Total Points:\t\t\t    $result_points_total"
     echo -e "Your Points :\t\t\t    $result_points_got"
     echo ""
+
+
+
+
 }
 
 
@@ -403,5 +440,10 @@ fi
 
 if [ "$1" == "list" ]; then
     list_all_missions
+    exit 0
+fi
+
+if [ "$1" == "reset" ]; then
+    mission_reset
     exit 0
 fi
