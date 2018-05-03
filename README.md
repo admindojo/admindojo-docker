@@ -16,7 +16,8 @@ Requirements:
 git clone https://github.com/6uhrmittag/linux-admin-game.git
 cd linux-admin-game
 sudo ./setup.sh
-./game.sh list
+./helper input (select your mission here)
+./helper start (start the mission)
 ```
 
 ## Usage example
