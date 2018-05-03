@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e # Exit with nonzero exit code if anything fails
 
-source ../game.sh
+source ./game.sh
 setup
 
 test_missions() {
