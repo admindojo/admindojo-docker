@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-#
+#set -e
 
-#We use http://ipecho.net/ for descovering the external ip of your server
+
 #requirement
 #curl
 #wget
@@ -138,8 +138,17 @@ show_tasks() {
 
 
     mission_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
+
+    mission_author="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "author")"
+    mission_website="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "website")"
+
     echo ""
-    echo "Mission: $mission_title"
+    echo "######################################################"
+    echo "      Mission: $mission_title"
+    echo ""
+    echo -e "         by: "$mission_author" url: "$mission_website""
+    #echo -e
+    echo "######################################################"
     echo ""
     echo "Your Tasks:"
     echo ""
@@ -151,7 +160,7 @@ show_tasks() {
         task_desc="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "desc")"
 
         echo "-----------"
-        echo -e "$task_title"
+        echo -e "⏵ $task_title"
 
         if [ -n "$task_desc" ]; then
             echo -e "\tDescription: $task_desc"
@@ -165,6 +174,10 @@ show_tasks() {
 
     done
 
+    echo ""
+    mission_note="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
+
+    echo "❗ Note: $mission_note"
     echo ""
     echo ""
 }
@@ -248,7 +261,6 @@ set_current_mission() {
     local counter=1
 
     for FOLDER in $(ls "$PROGRAM_PATH_MISSIONS" ); do
-
         if [[ "$MISSION_NUMBER" == "$counter"  ]];then
                 crudini --set "$PLAYER_FILE" "player" "mission_current" "$FOLDER"
          return 0
@@ -340,33 +352,40 @@ check_result() {
         #echo ""
         if [ "$STATUS" == 0 ]; then
 
-            echo -e "$task_title\t${GREEN}solved ${NORMAL}"
+            echo -e "⏵ $task_title\t${GREEN}   solved ✔${NORMAL}"
 
 
 
             result_points_got=$(( $result_points_got + $task_points ))
 
+            task_hintnext="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "hintnext")"
 
         else
-            echo -e "$task_title\t${RED}failed ${NORMAL}"
+            echo -e "⏵ $task_title\t${RED} unsolved ✘${NORMAL}"
 
-            hint="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "hint")"
-            if [ -n "$hint" ]; then
-                echo -e "Hint: \t $hint"
-            fi
+            #hint="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "hint")"
+            #if [ -n "$hint" ]; then
+            #    echo -e "🔎 Hint: \t $hint"
+            #fi
 
 
             #echo -e ""
         fi
         #echo ""
-        echo -e "Points: \t\t\t     $task_points"
+        echo -e "  Points:\t\t\t\t  "$task_points""
         echo "-------------------------"
 
     done
 
     echo ""
-    echo -e "Total Points:\t\t\t    $result_points_total"
-    echo -e "Your Points :\t\t\t    $result_points_got"
+    echo -e "  Total Points:\t\t\t          $result_points_total"
+    echo -e "  Your Points :\t\t\t          $result_points_got"
+    echo ""
+    if [ ! "$task_hintnext" == "" ]; then
+        echo ""
+        echo "🔎 $task_hintnext"
+        echo ""
+    fi
     echo ""
 
 

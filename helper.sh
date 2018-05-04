@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#set -e
 
 source game.sh
 setup
@@ -26,7 +27,9 @@ input() {
 
     #mission_status=$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "solved")
     #echo "$mission_status"
-    set_current_mission $mission_number
+
+    set_current_mission "$mission_number"
+
 }
 
 
@@ -91,7 +94,7 @@ check_live() {
                     echo ""
                     echo -e "${GREEN}You just solved:${NORMAL}"
                 fi
-
+                echo "test"
                 #mark task as solved in mission-file
                 #mark_task_solved "$task"
                 crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "solved" "true"
@@ -106,6 +109,8 @@ check_live() {
                 echo -e "${GREEN}\t\t$task_title! + $task_points Points${NORMAL}"
                 let "tasks_done++"
                 task_done_in_run=1
+
+
             fi
 
 
@@ -113,8 +118,6 @@ check_live() {
             let "tasks_done++"
          fi
     let "tasks_total++"
-
-
 
 
     done
@@ -140,8 +143,6 @@ check_live() {
         if [[ "$task_done_in_run" == "1" ]];then
             echo "Tasks done: $tasks_done/$tasks_total"
             echo ""
-            echo "Hit [enter]"
-            echo ""
         fi
     fi
 
@@ -160,7 +161,7 @@ background_helper(){
     while [ true ]
     do
         #check every minute
-        sleep 60
+        sleep 10
         check_live
 
     #    if [[ -d /home/marvin/check ]];then

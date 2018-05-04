@@ -3,6 +3,12 @@
 - https://github.com/reconquest/shdoc
 - https://github.com/reconquest/tests.sh
 
+
+- https://robots.thoughtbot.com/shell-script-suggestions-for-speedy-setups
+- https://dev.to/thiht/shell-scripts-matter
+- https://github.com/kward/shunit2
+
+
 ##nice to have
 - Error output (google syle)
 >STDOUT vs STDERR
