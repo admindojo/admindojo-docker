@@ -1,7 +1,7 @@
 # linux admin game
 > Learn linux while solving interactive sysadmin missions!
 
-[![Build Status](https://travis-ci.org/6uhrmittag/linux-admin-tutor.svg?branch=master)](https://travis-ci.org/6uhrmittag/linux-admin-tutor)
+[![Build Status](https://travis-ci.org/6uhrmittag/linux-admin-game.svg?branch=master)](https://travis-ci.org/6uhrmittag/linux-admin-game)
 
 The Linux admin game helps you to learn linux admin tasks like installing a webserver or updateing the system.
 You'll get missions and tasks to solve and hints on how to solve the mission. 
