@@ -1,46 +1,6 @@
 #!/usr/bin/env bash
 #set -e
 
-source game.sh
-setup
-
-
-
-
-# @description
-#
-# @example
-#
-#
-#
-# @arg $1
-#
-# @noargs
-#
-#
-# @stdout Path to something.
-input() {
-    list_all_missions
-
-    input_mission_number
-    mission_number="$?"
-
-    #mission_status=$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "solved")
-    #echo "$mission_status"
-
-    set_current_mission "$mission_number"
-
-}
-
-
-
-
-
-
-
-
-
-
 
 # @description
 #
@@ -94,7 +54,7 @@ check_live() {
                     echo ""
                     echo -e "${GREEN}You just solved:${NORMAL}"
                 fi
-                echo "test"
+
                 #mark task as solved in mission-file
                 #mark_task_solved "$task"
                 crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "solved" "true"
@@ -106,10 +66,10 @@ check_live() {
                 task_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "title")"
 
                 result_points_got=$(( $result_points_got + $task_points ))
-                echo -e "${GREEN}\t\t$task_title! + $task_points Points${NORMAL}"
+                echo -e "${GREEN}\t\t$task_title! \t+ $task_points Points${NORMAL}"
                 let "tasks_done++"
                 task_done_in_run=1
-
+                task_hintnext="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "hintnext")"
 
             fi
 
@@ -129,7 +89,7 @@ check_live() {
         echo ""
         echo "Mission complete"
         sleep 2
-        check_result
+        check_result "tutor"
 
         #mark mission as solved
         echo ""
@@ -143,7 +103,19 @@ check_live() {
         if [[ "$task_done_in_run" == "1" ]];then
             echo "Tasks done: $tasks_done/$tasks_total"
             echo ""
+
+             if [ ! "$task_hintnext" == "" ]; then
+                echo ""
+                echo "Next: $task_hintnext"
+                echo ""
+
+             fi
+
+            echo "Hit [enter]"
+            echo ""
         fi
+
+
     fi
 
     #echo "Tasks total: $tasks_total"
@@ -177,37 +149,6 @@ background_helper(){
 
 
 
-
-
-
-if [ "$1" == "live" ]; then
-    check_live
-    exit 0
-fi
-
-if [ "$1" == "input" ]; then
-    input
-    exit $?
-fi
-
-if [ "$1" == "start" ]; then
-    echo "Starting background helper"
-    echo "Helper checkes every minute for solved tasks"
-    echo ""
-    background_helper &
-    # Storing the background process' PID.
-    bg_pid=$!
-
-    # Trapping SIGKILLs so we can send them back to $bg_pid.
-    trap "kill -15 $bg_pid" 2 15
-
-    crudini --set "$PLAYER_FILE" "local" "helper_pid" "$bg_pid"
-    #echo "PID: $bg_pid"
-
-    #echo ""
-    show_tasks $(get_current_mission)
-
-fi
 
 
 #Thanks:

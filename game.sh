@@ -104,7 +104,7 @@ list_all_missions() {
     local counter=1
 
     echo ""
-    echo "Missions:"
+    echo "Available missions:"
     echo ""
     for FOLDER in $(ls "$PROGRAM_PATH_MISSIONS" ); do
 
@@ -159,7 +159,8 @@ show_tasks() {
         task_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "title")"
         task_desc="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "desc")"
 
-        echo "-----------"
+        echo ""
+        #echo "-----------"
         echo -e "⏵ $task_title"
 
         if [ -n "$task_desc" ]; then
@@ -177,7 +178,7 @@ show_tasks() {
     echo ""
     mission_note="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
 
-    echo "❗ Note: $mission_note"
+    echo "Note: $mission_note"
     echo ""
     echo ""
 }
@@ -313,6 +314,27 @@ get_all_tasks() {
     return 0
 }
 
+# @description Asks player to choose a mission. Lists missions and waits for input.
+#
+# @example input
+#
+# @noargs
+#
+#
+# @stdout lists missions
+input() {
+    list_all_missions
+
+    input_mission_number
+    mission_number="$?"
+
+    #mission_status=$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "solved")
+    #echo "$mission_status"
+
+    set_current_mission "$mission_number"
+
+}
+
 # @description Outputs full Result with status, points and hints
 #
 # @example
@@ -323,6 +345,8 @@ get_all_tasks() {
 #
 # @stdout Full mission status
 check_result() {
+
+    gamemode="$1"
 
     #get_current_mission
 
@@ -363,13 +387,15 @@ check_result() {
         else
             echo -e "⏵ $task_title\t${RED} unsolved ✘${NORMAL}"
 
-            #hint="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "hint")"
-            #if [ -n "$hint" ]; then
-            #    echo -e "🔎 Hint: \t $hint"
-            #fi
+            if [[ "$gamemode" != "tutor" ]]; then
 
+                hint="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "hint")"
+                if [ -n "$hint" ]; then
+                    echo -e "🔎Hint: \t $hint"
+                fi
+            fi
 
-            #echo -e ""
+            echo -e ""
         fi
         #echo ""
         echo -e "  Points:\t\t\t\t  "$task_points""
@@ -381,15 +407,32 @@ check_result() {
     echo -e "  Total Points:\t\t\t          $result_points_total"
     echo -e "  Your Points :\t\t\t          $result_points_got"
     echo ""
-    if [ ! "$task_hintnext" == "" ]; then
-        echo ""
-        echo "🔎 $task_hintnext"
-        echo ""
+
+
+
+    if [ $gamemode != "tutor" ] && [[ "$result_points_got" == "$result_points_total" ]];then
+            echo ""
+            echo "You solved all tasks!"
+            echo ""
+            echo "Mission complete"
+            sleep 2
+
+            #mark mission as solved
+            echo ""
+            crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "solved" "true"
+            echo "Mission marked as solved"
+            echo ""
+            echo ""
+            exit 0
+    else
+         if [ "$gamemode" == "tutor" ] && [ ! "$task_hintnext" == "" ]; then
+            echo ""
+            echo "🔎 $task_hintnext"
+            echo ""
+         fi
+
     fi
     echo ""
-
-
-
 
 }
 
@@ -403,10 +446,7 @@ setup
 
 
 
-if [ "$1" == "check" ]; then
-    check_result
-    exit 0
-fi
+
 
 if [ "$1" == "testing" ]; then
     set -e # Exit with nonzero exit code if anything fails
@@ -424,13 +464,13 @@ if [ "$1" == "testing" ]; then
     echo ""
 fi
 
-if [ "$1" == "show" ]; then
+if [ "$1" == "tasks" ]; then
     MISSION_FOLDER="$(crudini --get "$PLAYER_FILE" "player" "mission_current")"
     show_tasks "$MISSION_FOLDER"
     exit 0
 fi
 
-if [ "$1" == "list" ]; then
+if [ "$1" == "missions" ]; then
     list_all_missions
     exit 0
 fi
@@ -438,4 +478,36 @@ fi
 if [ "$1" == "reset" ]; then
     mission_reset
     exit 0
+fi
+
+if [ "$1" == "end" ]; then
+    check_result
+    exit 0
+fi
+
+if [ "$1" == "start" ]; then
+    input
+    show_tasks "$(get_current_mission)"
+    exit $?
+fi
+
+if [ "$1" == "tutor" ]; then
+    echo "Starting background tutor"
+    echo "The tutor checkes every minute for solved tasks and provides hints."
+    echo ""
+    source ./helper.sh
+
+    background_helper &
+    # Storing the background process' PID.
+    bg_pid=$!
+
+    # Trapping SIGKILLs so we can send them back to $bg_pid.
+    trap "kill -15 $bg_pid" 2 15
+
+    crudini --set "$PLAYER_FILE" "local" "helper_pid" "$bg_pid"
+    #echo "PID: $bg_pid"
+
+    #echo ""
+    show_tasks $(get_current_mission)
+
 fi
