@@ -24,11 +24,11 @@ install_requirements() {
     echo "------------------   INSTALL REQUIREMENTS START   ------------------"
     echo ""
 
-    sudo apt-get -qq update
 
-    install "curl"
-    install "wget"
-    install "crudini"
+
+    apt-get install -y "curl"
+    apt-get install -y "wget"
+    apt-get install -y "crudini"
 
     echo ""
     echo "------------------   INSTALL REQUIREMENTS DONE   ------------------"
