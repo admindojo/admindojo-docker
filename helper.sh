@@ -133,7 +133,7 @@ background_helper(){
     while [ true ]
     do
         #check every minute
-        sleep 10
+        sleep 60
         check_live
 
     #    if [[ -d /home/marvin/check ]];then

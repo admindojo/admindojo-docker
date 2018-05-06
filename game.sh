@@ -410,7 +410,7 @@ check_result() {
 
 
 
-    if [ $gamemode != "tutor" ] && [[ "$result_points_got" == "$result_points_total" ]];then
+    if [ ! "$gamemode" == "tutor" ] && [[ "$result_points_got" == "$result_points_total" ]];then
             echo ""
             echo "You solved all tasks!"
             echo ""
@@ -475,6 +475,44 @@ if [ "$1" == "missions" ]; then
     exit 0
 fi
 
+if [ "$1" == "help" ] || [ "$1" == "-?" ] || [ "$1" == "--help" ] || [ "$1" == "" ]; then
+
+
+echo " Linux admin game"
+echo ""
+echo " Start the game"
+echo "    start   (list, select and start mission)"
+echo ""
+echo " In-game control"
+echo "    tasks   (show tasks)"
+echo "    end     (end game, show restult)"
+echo ""
+echo " Tutor mode:"
+echo " Guides you through your mission. Checks every minute if you solved a task and shows hints."
+echo "    tutor   (start tutor)"
+echo ""
+echo ""
+
+#    echo -e "\n\n\n"
+#    echo ""
+#    echo -e "admingame missions: Lists available missions.\n"
+#    echo -e "admingame start: Lists missions, let you choose a mission and starts the game.\n"
+#    echo -e "admingame tasks: Lists all tasks.\n"
+#    echo -e "admingame end: Checks your work and shows the result.\n"
+#    echo -e "admingame tutor: Starts the game in tutor mode. Checks every minute if you solved a task and shows hints.\n"
+#    echo ""
+#
+#    echo ""
+#    echo -e "Lists available missionsadmingame missions\n"
+#    echo -e "Lists missions, let you choose a mission and starts the game_ admingame start: \n"
+#    echo -e "Lists all tasks: admingame tasks: \n"
+#    echo -e "Checks your work and shows the result.: admingame end: \n"
+#    echo -e ": admingame tutor: \n"
+#    echo ""
+
+    exit 0
+fi
+
 if [ "$1" == "reset" ]; then
     mission_reset
     exit 0
@@ -492,7 +530,7 @@ if [ "$1" == "start" ]; then
 fi
 
 if [ "$1" == "tutor" ]; then
-    echo "Starting background tutor"
+    echo "Starting tutor"
     echo "The tutor checkes every minute for solved tasks and provides hints."
     echo ""
     source ./helper.sh

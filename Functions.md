@@ -10,6 +10,7 @@
 * [set_current_mission()](#set_current_mission)
 * [input_mission_number()](#input_mission_number)
 * [get_all_tasks()](#get_all_tasks)
+* [input()](#input)
 * [check_result()](#check_result)
 
 
@@ -163,6 +164,21 @@ Fills array $TASK_LIST_OF_TASK with names of all tasks of current mission.
 ```bash
 get_all_tasks 1
 ```
+
+## input()
+
+Asks player to choose a mission. Lists missions and waits for input.
+
+#### Example
+
+```bash
+```
+
+_Function has no arguments._
+
+### Output on stdout
+
+* lists missions
 
 ## check_result()
 
