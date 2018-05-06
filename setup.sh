@@ -46,7 +46,10 @@ source "~/.bash_profile"
 
 }
 
-
+setpath="$1"
 install_requirements
-set_path
+
+if [ "$setpath" == "" ] ;then
+    set_path
+fi
 exit $?
