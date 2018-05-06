@@ -49,7 +49,7 @@ source "~/.bash_profile"
 setpath="$1"
 install_requirements
 
-if [ "$setpath" == "" ] ;then
+if [ ! "$setpath" == "false" ] ;then
     set_path
 fi
 exit $?
