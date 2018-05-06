@@ -37,16 +37,8 @@ install_requirements() {
     return $?
 }
 
-set_path(){
-PROGRAM_PATH_WORKDIR="$(echo ${0%/*})"
-touch ~/.bash_profile
-echo 'export PATH=$PATH:$PROGRAM_PATH_WORKDIR'  >> ~/.bash_profile
-source "~/.bash_profile"
 
-
-}
 
 install_requirements
-set_path
 
 exit $?
