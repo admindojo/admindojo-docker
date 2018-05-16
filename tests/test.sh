@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 #
 
-# Test each mission
+# Test each lesson
 # Test only tasks that contain "test" commands
-test_missions() {
+test_lessons() {
 # marker for failed tests
 testing_error=1
 task_testingcmd_status=0
 task_solved_status=0
 
-    for FOLDER in $(ls $PROGRAM_PATH_MISSIONS ); do
+    for FOLDER in $(ls $PROGRAM_PATH_LESSONS ); do
 
-        MISSION_FOLDER=$(echo $FOLDER )
-        MISSION_PATH="$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER"
+        LESSON_FOLDER=$(echo $FOLDER )
+        LESSON_PATH="$PROGRAM_PATH_LESSONS/$LESSON_FOLDER"
 
 
-        mission_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
-        echo -e "TEST MISSION: $mission_title"
+        lesson_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "title")"
+        echo -e "TEST LESSON: $lesson_title"
 
         get_all_tasks $FOLDER
 
@@ -24,10 +24,10 @@ task_solved_status=0
             for task in "${TASK_LIST_OF_TASK[@]}"
             do
                 # Only test auto-testable tasks
-                task_testing_cmd="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "test")"
+                task_testing_cmd="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "test")"
                     if [ -n "$task_testing_cmd" ]; then
 
-                    task_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "title")"
+                    task_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "title")"
 
                     echo -e "\tTask: $task_title"
 
@@ -65,10 +65,10 @@ task_solved_status=0
 
             done
          if [[ "$task_solved_status" == "1" ]]; then
-            echo -e "${RED}Solved Check failed: $MISSION_PATH${NORMAL}"
+            echo -e "${RED}Solved Check failed: $LESSON_PATH${NORMAL}"
          fi
          if [[ "$testing_command_error" != "0" ]]; then
-            echo -e "${RED}Testing command failed: $MISSION_PATH${NORMAL}"
+            echo -e "${RED}Testing command failed: $LESSON_PATH${NORMAL}"
          fi
 
 
@@ -77,7 +77,7 @@ task_solved_status=0
 return $testing_error
 }
 
-echo "------------------   TEST MISSIONS START  ------------------"
-test_missions
+echo "------------------   TEST LESSONS START  ------------------"
+test_lessons
 return $testing_error
-echo "------------------   TEST MISSIONS DONE  ------------------"
+echo "------------------   TEST LESSONS DONE  ------------------"

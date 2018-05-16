@@ -16,11 +16,11 @@
 # @stdout Path to something.
 check_live() {
     # Get a fresh array of all tasks in $TASK_LIST_OF_TASK
-    get_all_tasks "$(get_current_mission)"
+    get_all_tasks "$(get_current_lesson)"
 
 
-    mission_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
-    #echo "Mission: $mission_title"
+    lesson_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "title")"
+    #echo "Lesson: $lesson_title"
 
     result_points_total=""
     result_points_got=""
@@ -43,7 +43,7 @@ check_live() {
 
         let "task_counter++"
 
-        task_solved="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "solved")"
+        task_solved="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "solved")"
         if [ "$task_solved" == "false" ] || [ "$task_solved" == "" ];then
 
 
@@ -55,21 +55,21 @@ check_live() {
                     echo -e "${GREEN}You just solved:${NORMAL}"
                 fi
 
-                #mark task as solved in mission-file
+                #mark task as solved in lesson-file
                 #mark_task_solved "$task"
-                crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "solved" "true"
+                crudini --set "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "solved" "true"
 
                 #Get points for task
-                task_points="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "points")"
+                task_points="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "points")"
                 result_points_total=$(( $result_points_total + $task_points ))
 
-                task_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "title")"
+                task_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "title")"
 
                 result_points_got=$(( $result_points_got + $task_points ))
                 echo -e "${GREEN}\t\t$task_title! \t+ $task_points Points${NORMAL}"
                 let "tasks_done++"
                 task_done_in_run=1
-                task_hintnext="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "hintnext")"
+                task_hintnext="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "hintnext")"
 
             fi
 
@@ -87,14 +87,14 @@ check_live() {
         echo ""
         echo "You solved all tasks!"
         echo ""
-        echo "Mission complete"
+        echo "Lesson complete"
         sleep 2
         check_result "tutor"
 
-        #mark mission as solved
+        #mark lesson as solved
         echo ""
-        crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "solved" "true"
-        echo "Mission marked as solved"
+        crudini --set "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "solved" "true"
+        echo "Lesson marked as solved"
         echo ""
         echo "Hit [enter]"
         echo ""
@@ -127,7 +127,7 @@ check_live() {
 
 
 #TEST BACKGRUND HELPER
-# Runs background when mission is started. Should check the task-status periodically. Notifies user when a task is completed.
+# Runs background when lesson is started. Should check the task-status periodically. Notifies user when a task is completed.
 #
 background_helper(){
     while [ true ]

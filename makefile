@@ -4,12 +4,12 @@ NEWDIR := $$PATH:$(DIR)
 #Make Function Documentation
 doku: game.sh
 	rm -f Functions.md
-	~/programming/tools/shdoc/shdoc  < game.sh  >> Functions.md
+	~/programming/tools/shdoc/shdoc  < admindojo.sh  >> Functions.md
 
 install:
 
-	@echo Make game executable
-	@chmod u+x game.sh
+	@echo Make admindojo executable
+	@chmod u+x admindojo.sh
 	@chmod u+x helper.sh
 	@echo "PATH: $$PATH
 	./setup.sh

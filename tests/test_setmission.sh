@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -e # Exit with nonzero exit code if anything fails
 
-rm -rf "./missions/*"
-mv "./tests/test_testmission-allwaysok_test" "./missions/"
+rm -rf "./lessons/*"
+mv "./tests/test_testmission-allwaysok_test" "./lessons/"
 
 ./helper.sh input 1
 

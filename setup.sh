@@ -41,7 +41,7 @@ set_path(){
 PROGRAM_PATH_WORKDIR="$(echo ${0%/*})"
 touch ~/.bash_profile
 
-echo "alias admingame='game.sh'" >> ~/.bash_profile
+echo "alias admindojo='admindojo.sh'" >> ~/.bash_profile
 
 echo 'export PATH=$PATH:$PROGRAM_PATH_WORKDIR'  >> ~/.bash_profile
 
