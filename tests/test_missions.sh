@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-#
+#set -e # Exit with nonzero exit code if anything fails
 
-# Test each mission
-# Test only tasks that contain "test" commands
+source ../game.sh
+setup
+
 test_missions() {
 # marker for failed tests
-testing_error=1
+testing_error=0
 task_testingcmd_status=0
 task_solved_status=0
 
@@ -40,7 +41,6 @@ task_solved_status=0
 
                     if [[ "$task_status" == "ok" ]] || [[ "$task_status" = *"OK"* ]] || [[ "$task_status" == "0" ]]; then
                         task_testing_status="${GREEN}ok${NORMAL}"
-                        testing_error=0
                         #return 0
                     else
                         task_testing_status="${RED}failed${NORMAL}"
@@ -51,7 +51,6 @@ task_solved_status=0
 
                     if [[ "$testing_command_error" == "0" ]]; then
                         task_testingcmd_status="${GREEN}ok${NORMAL}"
-                        testing_error=0
                     else
                         task_testingcmd_status="${RED}failed${NORMAL}"
                         testing_error=1
@@ -74,10 +73,14 @@ task_solved_status=0
 
         echo ""
     done
+    echo "test"
 return $testing_error
 }
 
 echo "------------------   TEST MISSIONS START  ------------------"
+
 test_missions
-return $testing_error
+
 echo "------------------   TEST MISSIONS DONE  ------------------"
+
+exit $?

@@ -4,50 +4,42 @@
 * [get_mission_path()](#get_mission_path)
 * [list_all_missions()](#list_all_missions)
 * [show_tasks()](#show_tasks)
+* [mission_reset()](#mission_reset)
 * [check_success()](#check_success)
 * [get_current_mission()](#get_current_mission)
 * [set_current_mission()](#set_current_mission)
 * [input_mission_number()](#input_mission_number)
 * [get_all_tasks()](#get_all_tasks)
+* [input()](#input)
 * [check_result()](#check_result)
 
 
 ## setup()
 
-Multiline description goes here and
+Setup. Sets up common variables with paths and filenames
 there
 
 #### Example
 
 ```bash
-some:other:func a b c
-echo 123
 ```
 
 _Function has no arguments._
 
 ## get_missions()
 
-@description
+Gets meta info for each mission. UNUSED
 
 #### Example
 
 ```bash
 ```
 
-### Arguments
-
-* $1
-
 _Function has no arguments._
-
-### Output on stdout
-
-* Path to something.
 
 ## get_mission_path()
 
-@description
+Fills $MISSION_PATH with full path to mission name UNUSED
 
 #### Example
 
@@ -56,37 +48,26 @@ _Function has no arguments._
 
 ### Arguments
 
-* $1
-
-_Function has no arguments._
-
-### Output on stdout
-
-* Path to something.
+* **$1** (string): mission-name
 
 ## list_all_missions()
 
-@description
+Outputs all missions with counter(mission number)
 
 #### Example
 
 ```bash
 ```
 
-### Arguments
-
-* $1
-
 _Function has no arguments._
 
 ### Output on stdout
 
-* Path to something.
+* 1 Install and run apache webserver
 
 ## show_tasks()
 
-Outputs full info for the current mission.
-Currently outputs last mission. not current mission
+Outputs full info of mission
 
 #### Example
 
@@ -104,33 +85,42 @@ _Function has no arguments._
 
 * Full mission info. Title + Tasks
 
-## check_success()
+## mission_reset()
 
-@description
+Resets solved-status of current mission+all tasks of mission.
 
 #### Example
 
 ```bash
 ```
 
-### Arguments
-
-* $1
-
 _Function has no arguments._
 
-### Output on stdout
+## check_success()
 
-* Path to something.
-
-## get_current_mission()
-
-Returns current mission from player.ini. Returns MISSION_CURRENT
+Checks task status with help of "cmd" command in task.ini.
 
 #### Example
 
 ```bash
-get_all_tasks $(get_current_mission)
+```
+
+### Exit codes
+
+* **0**: Task solved
+* **1**: Task unsolved
+
+### Arguments
+
+* **$1** (task):
+
+## get_current_mission()
+
+Returns current mission from player.ini. Returns $MISSION_CURRENT
+
+#### Example
+
+```bash
 ```
 
 _Function has no arguments._
@@ -167,7 +157,7 @@ _Function has no arguments._
 
 ## get_all_tasks()
 
-Fills array TASK_LIST_OF_TASK with names of all tasks of current mission.
+Fills array $TASK_LIST_OF_TASK with names of all tasks of current mission.
 
 #### Example
 
@@ -175,22 +165,33 @@ Fills array TASK_LIST_OF_TASK with names of all tasks of current mission.
 get_all_tasks 1
 ```
 
-## check_result()
+## input()
 
-Checks
+Asks player to choose a mission. Lists missions and waits for input.
 
 #### Example
 
 ```bash
 ```
 
-### Arguments
+_Function has no arguments._
 
-* $1
+### Output on stdout
+
+* lists missions
+
+## check_result()
+
+Outputs full Result with status, points and hints
+
+#### Example
+
+```bash
+```
 
 _Function has no arguments._
 
 ### Output on stdout
 
-* Path to something.
+* Full mission status
 

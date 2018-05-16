@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-#
+#set -e
 
-#We use http://ipecho.net/ for descovering the external ip of your server
+
 #requirement
 #curl
 #wget
@@ -15,12 +15,10 @@ GREEN="$(printf '\033[1;32m')"
 NORMAL="$(printf '\033[0m')"
 
 
-# @description Multiline description goes here and
+# @description Setup. Sets up common variables with paths and filenames
 # there
 #
-# @example
-#   some:other:func a b c
-#   echo 123
+# @example setup
 #
 #
 # @noargs
@@ -37,18 +35,13 @@ setup() {
     PLAYER_FILE="$PROGRAM_PATH_WORKDIR/player/player.ini"
 }
 
-# @description
+# @description Gets meta info for each mission. UNUSED
 #
 # @example
 #
-#
-#
-# @arg $1
+
 #
 # @noargs
-#
-#
-# @stdout Path to something.
 get_missions() {
     #gets all missions
     for FOLDER in $(ls "$PROGRAM_PATH_MISSIONS" ); do
@@ -58,9 +51,9 @@ get_missions() {
       #Get mission meta
       #"$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
         MISSION_PATH="$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER"
-        MISSION_type="$(echo $MISSION_FOLDER | cut -d '_' -f1)"
-        MISSION_name="$(echo $MISSION_FOLDER | cut -d '_' -f2)"
-        MISSION_keyword="$(echo $MISSION_FOLDER | cut -d '_' -f3)"
+        MISSION_type="$(echo "$MISSION_FOLDER" | cut -d '_' -f1)"
+        MISSION_name="$(echo "$MISSION_FOLDER" | cut -d '_' -f2)"
+        MISSION_keyword="$(echo "$MISSION_FOLDER" | cut -d '_' -f3)"
         #echo "---"
         #echo $MISSION_FOLDER
         #echo $MISSION_PATH
@@ -70,23 +63,19 @@ get_missions() {
     done
 }
 
-# @description
+# @description Fills $MISSION_PATH with full path to mission name UNUSED
 #
 # @example
 #
 #
 #
-# @arg $1
+# @arg $1 string mission-name
 #
-# @noargs
-#
-#
-# @stdout Path to something.
 get_mission_path() {
 
     local MISSION_NAME=$1
 
-    for FOLDER in $(ls $PROGRAM_PATH_MISSIONS ); do
+    for FOLDER in $(ls "$PROGRAM_PATH_MISSIONS" ); do
 
         MISSION_FOLDER="$FOLDER"
         MISSION_PATH="$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER"
@@ -102,38 +91,34 @@ get_mission_path() {
 return 1
 }
 
-# @description
+# @description Outputs all missions with counter(mission number)
 #
 # @example
 #
 #
-#
-# @arg $1
-#
 # @noargs
 #
 #
-# @stdout Path to something.
+# @stdout 1 Install and run apache webserver
 list_all_missions() {
     local counter=1
 
     echo ""
-    echo "Missions:"
+    echo "Available missions:"
     echo ""
-    for FOLDER in $(ls $PROGRAM_PATH_MISSIONS ); do
+    for FOLDER in $(ls "$PROGRAM_PATH_MISSIONS" ); do
 
         MISSION_FOLDER="$FOLDER"
         MISSION_PATH="$PROGRAM_PATH_MISSIONS/$MISSION_FOLDER"
 
-
         mission_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
         echo -e "\t$counter $mission_title"
+
         let "counter++"
      done
 }
 
-# @description Outputs full info for the current mission.
-# Currently outputs last mission. not current mission
+# @description Outputs full info of mission
 #
 # @example
 #   show_tasks mission_current
@@ -153,8 +138,17 @@ show_tasks() {
 
 
     mission_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
+
+    mission_author="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "author")"
+    mission_website="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "website")"
+
     echo ""
-    echo "Mission: $mission_title"
+    echo "######################################################"
+    echo "      Mission: $mission_title"
+    echo ""
+    echo -e "         by: "$mission_author" url: "$mission_website""
+    #echo -e
+    echo "######################################################"
     echo ""
     echo "Your Tasks:"
     echo ""
@@ -165,30 +159,62 @@ show_tasks() {
         task_title="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "title")"
         task_desc="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "desc")"
 
-        echo "-----------"
-        echo -e "$task_title"
+        echo ""
+        #echo "-----------"
+        echo -e "⏵ $task_title"
 
         if [ -n "$task_desc" ]; then
-            echo -e "\t$task_desc"
+            echo -e "\tDescription: $task_desc"
         fi
+
+        why="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "why")"
+        if [ -n "$why" ]; then
+            echo -e "\tWhy: $why"
+        fi
+
+
     done
 
+    echo ""
+    mission_note="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "title")"
+
+    echo "Note: $mission_note"
     echo ""
     echo ""
 }
 
-# @description
+# @description Resets solved-status of current mission+all tasks of mission.
 #
-# @example
+# @example mission_reset
 #
-#
-#
-# @arg $1
-#
+
 # @noargs
 #
+mission_reset() {
+    # Get a fresh array of all tasks in $TASK_LIST_OF_TASK
+    get_all_tasks "$(get_current_mission)"
+
+    #Check each task
+    for task in "${TASK_LIST_OF_TASK[@]}"
+    do
+        crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "solved" "false"
+        crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "solved" "false"
+    done
+
+}
+
+
+
+
+# @description Checks task status with help of "cmd" command in task.ini.
 #
-# @stdout Path to something.
+# @example check_success task1
+#
+# @exitcode 0 Task solved
+# @exitcode 1 Task unsolved
+
+# @arg $1 task
+#
 check_success() {
     check_task="$1"
     cmd="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$check_task" "cmd")"
@@ -214,15 +240,14 @@ check_success() {
 
 }
 
-# @description Returns current mission from player.ini. Returns MISSION_CURRENT
+# @description Returns current mission from player.ini. Returns $MISSION_CURRENT
 #
-# @example
-#   get_all_tasks $(get_current_mission)
+# @example get_all_tasks $(get_current_mission)
 #
 # @noargs
 get_current_mission() {
     MISSION_CURRENT="$(crudini --get "$PLAYER_FILE" "player" "mission_current")"
-    #echo "$MISSION_CURRENT"
+    echo "$MISSION_CURRENT"
 }
 
 # @description Writes current mission to player.ini. Writes foldername of mission.
@@ -237,7 +262,6 @@ set_current_mission() {
     local counter=1
 
     for FOLDER in $(ls "$PROGRAM_PATH_MISSIONS" ); do
-
         if [[ "$MISSION_NUMBER" == "$counter"  ]];then
                 crudini --set "$PLAYER_FILE" "player" "mission_current" "$FOLDER"
          return 0
@@ -270,7 +294,7 @@ input_mission_number() {
     return "$MISSION_CURRENT_NUMBER"
 }
 
-# @description Fills array TASK_LIST_OF_TASK with names of all tasks of current mission.
+# @description Fills array $TASK_LIST_OF_TASK with names of all tasks of current mission.
 #
 # @example
 #   get_all_tasks 1
@@ -290,19 +314,39 @@ get_all_tasks() {
     return 0
 }
 
+# @description Asks player to choose a mission. Lists missions and waits for input.
+#
+# @example input
+#
+# @noargs
+#
+#
+# @stdout lists missions
+input() {
+    list_all_missions
+
+    input_mission_number
+    mission_number="$?"
+
+    #mission_status=$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "solved")
+    #echo "$mission_status"
+
+    set_current_mission "$mission_number"
+
+}
+
 # @description Outputs full Result with status, points and hints
 #
 # @example
 #
 #
-#
-# @arg $1
-#
 # @noargs
 #
 #
-# @stdout Path to something.
+# @stdout Full mission status
 check_result() {
+
+    gamemode="$1"
 
     #get_current_mission
 
@@ -332,34 +376,64 @@ check_result() {
         #echo ""
         if [ "$STATUS" == 0 ]; then
 
-            echo -e "$task_title\t${GREEN}solved ${NORMAL}"
+            echo -e "⏵ $task_title\t${GREEN}   solved ✔${NORMAL}"
 
 
 
             result_points_got=$(( $result_points_got + $task_points ))
 
+            task_hintnext="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "hintnext")"
 
         else
-            echo -e "$task_title\t${RED}failed ${NORMAL}"
+            echo -e "⏵ $task_title\t${RED} unsolved ✘${NORMAL}"
 
-            hint="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "hint")"
-            if [ -n "$hint" ]; then
-                echo -e "Hint: \t $hint"
+            if [[ "$gamemode" != "tutor" ]]; then
+
+                hint="$(crudini --get "$MISSION_PATH/$MISSIONS_FILENAME_TASKS" "$task" "hint")"
+                if [ -n "$hint" ]; then
+                    echo -e "🔎Hint: \t $hint"
+                fi
             fi
 
-
-            #echo -e ""
+            echo -e ""
         fi
         #echo ""
-        echo -e "Points: \t\t\t     $task_points"
+        echo -e "  Points:\t\t\t\t  "$task_points""
         echo "-------------------------"
 
     done
 
     echo ""
-    echo -e "Total Points:\t\t\t    $result_points_total"
-    echo -e "Your Points :\t\t\t    $result_points_got"
+    echo -e "  Total Points:\t\t\t          $result_points_total"
+    echo -e "  Your Points :\t\t\t          $result_points_got"
     echo ""
+
+
+
+    if [ ! "$gamemode" == "tutor" ] && [[ "$result_points_got" == "$result_points_total" ]];then
+            echo ""
+            echo "You solved all tasks!"
+            echo ""
+            echo "Mission complete"
+            sleep 2
+
+            #mark mission as solved
+            echo ""
+            crudini --set "$MISSION_PATH/$MISSIONS_FILENAME_META" "mission" "solved" "true"
+            echo "Mission marked as solved"
+            echo ""
+            echo ""
+            exit 0
+    else
+         if [ "$gamemode" == "tutor" ] && [ ! "$task_hintnext" == "" ]; then
+            echo ""
+            echo "🔎 $task_hintnext"
+            echo ""
+         fi
+
+    fi
+    echo ""
+
 }
 
 
@@ -372,10 +446,7 @@ setup
 
 
 
-if [ "$1" == "check" ]; then
-    check_result
-    exit 0
-fi
+
 
 if [ "$1" == "testing" ]; then
     set -e # Exit with nonzero exit code if anything fails
@@ -391,17 +462,90 @@ if [ "$1" == "testing" ]; then
     echo ""
     echo "------------------   TEST END    ------------------"
     echo ""
-
-    exit $?
 fi
 
-if [ "$1" == "show" ]; then
+if [ "$1" == "tasks" ]; then
     MISSION_FOLDER="$(crudini --get "$PLAYER_FILE" "player" "mission_current")"
     show_tasks "$MISSION_FOLDER"
     exit 0
 fi
 
-if [ "$1" == "list" ]; then
+if [ "$1" == "missions" ]; then
     list_all_missions
     exit 0
+fi
+
+if [ "$1" == "help" ] || [ "$1" == "-?" ] || [ "$1" == "--help" ] || [ "$1" == "" ]; then
+
+
+echo " Linux admin game"
+echo ""
+echo " Start the game"
+echo "    start   (list, select and start mission)"
+echo ""
+echo " In-game control"
+echo "    tasks   (show tasks)"
+echo "    end     (end game, show restult)"
+echo ""
+echo " Tutor mode:"
+echo " Guides you through your mission. Checks every minute if you solved a task and shows hints."
+echo "    tutor   (start tutor)"
+echo ""
+echo ""
+
+#    echo -e "\n\n\n"
+#    echo ""
+#    echo -e "admingame missions: Lists available missions.\n"
+#    echo -e "admingame start: Lists missions, let you choose a mission and starts the game.\n"
+#    echo -e "admingame tasks: Lists all tasks.\n"
+#    echo -e "admingame end: Checks your work and shows the result.\n"
+#    echo -e "admingame tutor: Starts the game in tutor mode. Checks every minute if you solved a task and shows hints.\n"
+#    echo ""
+#
+#    echo ""
+#    echo -e "Lists available missionsadmingame missions\n"
+#    echo -e "Lists missions, let you choose a mission and starts the game_ admingame start: \n"
+#    echo -e "Lists all tasks: admingame tasks: \n"
+#    echo -e "Checks your work and shows the result.: admingame end: \n"
+#    echo -e ": admingame tutor: \n"
+#    echo ""
+
+    exit 0
+fi
+
+if [ "$1" == "reset" ]; then
+    mission_reset
+    exit 0
+fi
+
+if [ "$1" == "end" ]; then
+    check_result
+    exit 0
+fi
+
+if [ "$1" == "start" ]; then
+    input
+    show_tasks "$(get_current_mission)"
+    exit $?
+fi
+
+if [ "$1" == "tutor" ]; then
+    echo "Starting tutor"
+    echo "The tutor checkes every minute for solved tasks and provides hints."
+    echo ""
+    source ./helper.sh
+
+    background_helper &
+    # Storing the background process' PID.
+    bg_pid=$!
+
+    # Trapping SIGKILLs so we can send them back to $bg_pid.
+    trap "kill -15 $bg_pid" 2 15
+
+    crudini --set "$PLAYER_FILE" "local" "helper_pid" "$bg_pid"
+    #echo "PID: $bg_pid"
+
+    #echo ""
+    show_tasks $(get_current_mission)
+
 fi

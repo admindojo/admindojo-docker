@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -e # Exit with nonzero exit code if anything fails
 
+#Install required software
+
 install(){
 
     echo  "Install: $1"
-    set +e
     if [ -x  "$(command -v "$1")" ]; then
         printf " (skipped, already installed)\n"
     else
@@ -16,23 +17,18 @@ install(){
           printf "\n${RED}Failed to install: $1 (pls let us know!)${NORMAL}\n"
         fi
     fi
-    set -e
 }
-
-
-
-
 
 install_requirements() {
     echo ""
     echo "------------------   INSTALL REQUIREMENTS START   ------------------"
     echo ""
 
-    sudo apt-get -qq update
 
-    install "curl"
-    install "wget"
-    install "crudini"
+
+    apt-get install -y "curl"
+    apt-get install -y "wget"
+    apt-get install -y "crudini"
 
     echo ""
     echo "------------------   INSTALL REQUIREMENTS DONE   ------------------"
@@ -42,4 +38,7 @@ install_requirements() {
 }
 
 
+
 install_requirements
+
+exit $?
