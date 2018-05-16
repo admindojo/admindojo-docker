@@ -54,8 +54,8 @@ Starts a background tutor that checks your tasks and shows hints while playing.
 
 ## Development setup
 
-To run a test for all missions run `./admindojo.sh testing`. 
-Run this on a fresh VM/CI only. Testing mode installs/executes all mission tasks.
+To run a test for all lessons run `./admindojo.sh testing`. 
+Run this on a fresh VM/CI only. Testing mode installs/executes all lesson tasks.
 
 generate documentation:
 ```sh
@@ -78,7 +78,7 @@ Marvin Heimbrodt – [@6uhrmittag](https://twitter.com/6uhrmittag) – marvin@6u
 4. Push to the branch (`git push origin feature/fooBar`)
 5. Create a new Pull Request
 
-## Add missions
+## Add lessons
 
 1. Fork it (<https://github.com/admindojo/admindojo/fork>)
 2. Create your lesson branch (`git checkout -b lesson/fooBar`)
