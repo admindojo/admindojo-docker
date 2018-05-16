@@ -1,7 +1,7 @@
 # admindojo
 > hands-on sysadmin training right in your terminal
 
-[![Build Status](https://travis-ci.org/6uhrmittag/linux-admin-game.svg?branch=master)](https://travis-ci.org/6uhrmittag/linux-admin-game)
+[![Build Status](https://travis-ci.org/admindojo/admindojo.svg?branch=master)](https://travis-ci.org/admindojo/admindojo)
 
 admondojo is a game that helps you to learn linux admin tasks like installing a webserver or updating the system.
 You'll get lessons and tasks to solve and hints on how to solve your taks. 
