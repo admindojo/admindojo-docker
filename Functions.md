@@ -1,14 +1,14 @@
 
 * [setup()](#setup)
-* [get_missions()](#get_missions)
-* [get_mission_path()](#get_mission_path)
-* [list_all_missions()](#list_all_missions)
+* [get_lessons()](#get_lessons)
+* [get_lesson_path()](#get_lesson_path)
+* [list_all_lessons()](#list_all_lessons)
 * [show_tasks()](#show_tasks)
-* [mission_reset()](#mission_reset)
+* [lesson_reset()](#lesson_reset)
 * [check_success()](#check_success)
-* [get_current_mission()](#get_current_mission)
-* [set_current_mission()](#set_current_mission)
-* [input_mission_number()](#input_mission_number)
+* [get_current_lesson()](#get_current_lesson)
+* [set_current_lesson()](#set_current_lesson)
+* [input_lesson_number()](#input_lesson_number)
 * [get_all_tasks()](#get_all_tasks)
 * [input()](#input)
 * [check_result()](#check_result)
@@ -26,9 +26,9 @@ there
 
 _Function has no arguments._
 
-## get_missions()
+## get_lessons()
 
-Gets meta info for each mission. UNUSED
+Gets meta info for each lesson. UNUSED
 
 #### Example
 
@@ -37,9 +37,9 @@ Gets meta info for each mission. UNUSED
 
 _Function has no arguments._
 
-## get_mission_path()
+## get_lesson_path()
 
-Fills $MISSION_PATH with full path to mission name UNUSED
+Fills $LESSON_PATH with full path to lesson name UNUSED
 
 #### Example
 
@@ -48,11 +48,11 @@ Fills $MISSION_PATH with full path to mission name UNUSED
 
 ### Arguments
 
-* **$1** (string): mission-name
+* **$1** (string): lesson-name
 
-## list_all_missions()
+## list_all_lessons()
 
-Outputs all missions with counter(mission number)
+Outputs all lessons with counter(lesson number)
 
 #### Example
 
@@ -67,27 +67,27 @@ _Function has no arguments._
 
 ## show_tasks()
 
-Outputs full info of mission
+Outputs full info of lesson
 
 #### Example
 
 ```bash
-show_tasks mission_current
+show_tasks lesson_current
 ```
 
 ### Arguments
 
-* **$1** (string): mission
+* **$1** (string): lesson
 
 _Function has no arguments._
 
 ### Output on stdout
 
-* Full mission info. Title + Tasks
+* Full lesson info. Title + Tasks
 
-## mission_reset()
+## lesson_reset()
 
-Resets solved-status of current mission+all tasks of mission.
+Resets solved-status of current lesson+all tasks of lesson.
 
 #### Example
 
@@ -114,9 +114,9 @@ Checks task status with help of "cmd" command in task.ini.
 
 * **$1** (task):
 
-## get_current_mission()
+## get_current_lesson()
 
-Returns current mission from player.ini. Returns $MISSION_CURRENT
+Returns current lesson from player.ini. Returns $LESSON_CURRENT
 
 #### Example
 
@@ -125,29 +125,29 @@ Returns current mission from player.ini. Returns $MISSION_CURRENT
 
 _Function has no arguments._
 
-## set_current_mission()
+## set_current_lesson()
 
-Writes current mission to player.ini. Writes foldername of mission.
+Writes current lesson to player.ini. Writes foldername of lesson.
 
 #### Example
 
 ```bash
-set_current_mission 1
+set_current_lesson 1
 ```
 
 ### Arguments
 
-* **$1** (int): Mission number. Output of `ls` stating at 1
+* **$1** (int): Lesson number. Output of `ls` stating at 1
 
-## input_mission_number()
+## input_lesson_number()
 
-Receives mission number from terminal input. Returns Mission number
+Receives lesson number from terminal input. Returns Lesson number
 
 #### Example
 
 ```bash
-input_mission_number
-"Please select a mission [Input number]"
+input_lesson_number
+"Please select a lesson [Input number]"
 n
 "Numbers only"
 1
@@ -157,7 +157,7 @@ _Function has no arguments._
 
 ## get_all_tasks()
 
-Fills array $TASK_LIST_OF_TASK with names of all tasks of current mission.
+Fills array $TASK_LIST_OF_TASK with names of all tasks of current lesson.
 
 #### Example
 
@@ -167,7 +167,7 @@ get_all_tasks 1
 
 ## input()
 
-Asks player to choose a mission. Lists missions and waits for input.
+Asks player to choose a lesson. Lists lessons and waits for input.
 
 #### Example
 
@@ -178,7 +178,7 @@ _Function has no arguments._
 
 ### Output on stdout
 
-* lists missions
+* lists lessons
 
 ## check_result()
 
@@ -193,5 +193,5 @@ _Function has no arguments._
 
 ### Output on stdout
 
-* Full mission status
+* Full lesson status
 

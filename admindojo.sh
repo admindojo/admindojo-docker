@@ -335,7 +335,7 @@ input() {
 
 }
 
-# @description Outputs full Result with status, points and hints
+# @description Outputs full result with status, points and hints
 #
 # @example
 #
@@ -358,7 +358,7 @@ check_result() {
     echo ""
     echo "Lesson: $lesson_title"
     echo ""
-    echo "Your Result:"
+    echo "Your result:"
 
     result_points_total=""
     result_points_got=""

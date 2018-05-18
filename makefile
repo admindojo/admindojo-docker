@@ -2,7 +2,7 @@ SHELL := /bin/bash # Use bash syntax
 DIR := ${CURDIR}
 NEWDIR := $$PATH:$(DIR)
 #Make Function Documentation
-doku: game.sh
+doku: admindojo.sh
 	rm -f Functions.md
 	~/programming/tools/shdoc/shdoc  < admindojo.sh  >> Functions.md
 
