@@ -137,10 +137,10 @@ show_tasks() {
     echo "######################################################"
     echo "      Lesson: $lesson_title"
     echo ""
-    echo -e "  by: "$lesson_author"\n"
+    echo -e "\nby: "$lesson_author""
 
     if [ -n "$lesson_website" ]; then
-        echo -e "# website: "$lesson_website"\n"
+        echo -e "\nwebsite: "$lesson_website""
     fi
 
     #echo -e
