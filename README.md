@@ -80,6 +80,30 @@ Run this on a fresh VM/CI only!
 
 ***Testing mode installs/executes all lesson tasks.***
 
+### Testing admindojo in Docker
+Run the Dockerfile `development\dockerfile` to setup admindojo in a docker container.
+The container starts a SSH server, so it's possible to SSH into the container.
+Modify cloned repository with your fork/branch:
+````dockerfile
+#Clone Repo
+RUN git clone 'https://github.com/admindojo/admindojo.git'
+````
+Build image
+````bash
+ docker build -f "admindojo/development/dockerfile" -t admindojoimage .
+````
+Start container
+````bash
+docker run -d admindojotest --name admindojocontainer
+````
+Test inside container (or ssh into it)
+````bash
+docker exec -i --user sysadmin -t admindojocontainer /bin/bash
+sysadmin@4460579660c7:~/admindojo$ source ~/.bash_profile
+admindojo
+
+````
+
 #### generate documentation
 Install [shdoc](https://github.com/reconquest/shdoc) first
 ```sh
