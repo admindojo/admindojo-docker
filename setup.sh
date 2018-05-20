@@ -4,7 +4,7 @@ set -e # Exit with nonzero exit code if anything fails
 #Install required software
 
 install(){
-    echo "You may get asked for your sudo password..."
+
 
     echo  "Install: $1"
     if [ -x  "$(command -v "$1")" ]; then
@@ -23,6 +23,8 @@ install(){
 install_requirements() {
     echo ""
     echo "------------------   INSTALL REQUIREMENTS START   ------------------"
+    echo ""
+    echo "You may get asked for your sudo password..."
     echo ""
 
     sudo apt-get -qq update
