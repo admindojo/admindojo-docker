@@ -17,7 +17,7 @@ check_live() {
     lesson_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "title")"
 
     result_points_total=""
-    result_points_got=""
+    result_points_solved=""
 
     tasks_total=0
     tasks_done=0
@@ -26,10 +26,14 @@ check_live() {
 
     local task_counter=0
 
+
+
     #Check each task
     for task in "${TASK_LIST_OF_TASK[@]}"
     do
         task_points="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "points")"
+        result_points_total=$(( $result_points_total + $task_points ))
+
         if [[ $task_points != 0 ]];then
             check_success "$task"
             STATUS=$?
@@ -37,7 +41,6 @@ check_live() {
             STATUS=0
         fi
 
-        let "task_counter++"
 
         task_solved="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "solved")"
         if [ "$task_solved" == "false" ] || [ "$task_solved" == "" ];then
@@ -52,31 +55,22 @@ check_live() {
                 #mark_task_solved "$task"
                 crudini --set "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "solved" "true"
 
-                #Get points for task
-                task_points="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "points")"
-                result_points_total=$(( $result_points_total + $task_points ))
-
                 task_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "title")"
-
-                result_points_got=$(( $result_points_got + $task_points ))
-
+                result_points_solved=$(( $result_points_solved + $task_points ))
                 if [[ $task_points != 0 ]];then
                     echo -e "${GREEN}\t\t$task_title! \t+ $task_points Points${NORMAL}"
                 fi
 
-                let "tasks_done++"
                 task_done_in_run=1
                 task_hintnext="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "hintnext")"
-
             fi
          else
-            let "tasks_done++"
+            result_points_solved=$(( $result_points_solved + $task_points ))
          fi
-    let "tasks_total++"
     done
 
     #Output final result if all tasks are done
-    if [[ "$tasks_done" == "$tasks_total" ]];then
+    if [[ "$result_points_total" == "$result_points_solved" ]];then
         echo ""
         echo "You solved all tasks!"
         echo ""
