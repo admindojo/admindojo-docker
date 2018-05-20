@@ -73,6 +73,9 @@ Feedback and contribution is highly appreciated!
 
 The project is in a very early stage and so is the contribution setup. Please get in touch via github issue.
 
+### function documentation
+see `Functions.md` for full documentation of all functions.
+
 ### Development setup
 
 To run a test for all lessons run `./admindojo.sh testing`. 

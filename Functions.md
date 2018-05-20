@@ -67,7 +67,7 @@ _Function has no arguments._
 
 ## show_tasks()
 
-Outputs full info of lesson
+Outputs full info of given lesson
 
 #### Example
 
@@ -116,7 +116,7 @@ Checks task status with help of "cmd" command in task.ini.
 
 ## get_current_lesson()
 
-Returns current lesson from player.ini. Returns $LESSON_CURRENT
+Returns current lesson from player.ini. Returns $LESSON_CURRENT (String)
 
 #### Example
 
@@ -127,7 +127,7 @@ _Function has no arguments._
 
 ## set_current_lesson()
 
-Writes current lesson to player.ini. Writes foldername of lesson.
+Writes current lesson(string) to player.ini. string=foldername of lesson
 
 #### Example
 
@@ -141,7 +141,7 @@ set_current_lesson 1
 
 ## input_lesson_number()
 
-Receives lesson number from terminal input. Returns Lesson number
+Receives lesson number from terminal input. Returns Lesson number. Doesn't list all lesons.
 
 #### Example
 
@@ -167,7 +167,7 @@ get_all_tasks 1
 
 ## input()
 
-Asks player to choose a lesson. Lists lessons and waits for input.
+Asks player to choose a lesson. Lists lessons, waits for input, saves input as current lesson
 
 #### Example
 
@@ -182,14 +182,16 @@ _Function has no arguments._
 
 ## check_result()
 
-Outputs full Result with status, points and hints
+Outputs full result with status, points and hints
 
 #### Example
 
 ```bash
 ```
 
-_Function has no arguments._
+### Arguments
+
+* optional: gamemode (tutor)
 
 ### Output on stdout
 
