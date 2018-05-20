@@ -471,6 +471,7 @@ fi
 
 
 if [ "$1" == "tutor" ]; then
+    input
     echo "Starting tutor"
     echo "The tutor checks every minute for solved tasks and provides hints."
     echo ""
