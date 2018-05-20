@@ -173,7 +173,7 @@ show_tasks() {
 
     echo ""
 
-    lesson_note="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "title")"
+    lesson_note="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "note")"
     if [ -n "$lesson_note" ]; then
         echo "Note: $lesson_note"
         echo ""
@@ -344,6 +344,7 @@ check_result() {
     echo "Lesson: $lesson_title"
     echo ""
     echo "Your result:"
+    echo ""
 
     #reset score
     result_points_total=""
