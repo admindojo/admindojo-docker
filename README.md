@@ -3,7 +3,7 @@
 
 [![Build Status](https://travis-ci.org/admindojo/admindojo.svg?branch=master)](https://travis-ci.org/admindojo/admindojo)
 
-admondojo is a game that helps you learning to become familiar with linux admin tasks like installing and configuring a database.
+admondojo is a game that helps you to become familiar with linux admin tasks like installing and configuring a database.
 
 Each lesson contains tasks to solve. Once you're done your setup will get checked. 
 In tutor-mode a backgrund tutor will check your work constantly and provides hints.
