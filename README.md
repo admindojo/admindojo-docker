@@ -54,6 +54,7 @@ View your tasks:
 
 ## Interactive tutor mode
 `admindojo tutor`
+
 ![Get your result](./documentation/screenshot_result.png)
 
 
@@ -75,7 +76,9 @@ The project is in a very early stage and so is the contribution setup. Please ge
 ### Development setup
 
 To run a test for all lessons run `./admindojo.sh testing`. 
-Run this on a fresh VM/CI only! ***Testing mode installs/executes all lesson tasks.***
+Run this on a fresh VM/CI only!
+
+***Testing mode installs/executes all lesson tasks.***
 
 #### generate documentation
 Install [shdoc](https://github.com/reconquest/shdoc) first
