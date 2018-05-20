@@ -5,8 +5,8 @@
 
 admondojo is a game that helps you to become familiar with linux admin tasks like installing and configuring a database.
 
-Each lesson contains tasks to solve. Once you're done your setup will get checked. 
-In tutor-mode a backgrund tutor will check your work constantly and provides hints.
+Your training will be as realistic as possible - you'll install and configure real applications right in the terminal. Once you're done your setup will get checked and rated. 
+In tutor-mode a background tutor will check your work constantly and provides hints.
 
 
 ## Installation
