@@ -442,7 +442,7 @@ echo ""
 echo " admindojo"
 echo ""
 echo " Start the Training"
-echo "    admindojo list   (list available lesson)"
+echo "    admindojo lessons   (list available lesson)"
 echo "    admindojo start   (list, select and start lesson)"
 echo ""
 echo " In-game control"
@@ -490,7 +490,7 @@ if [ "$1" == "tutor" ]; then
     echo "Starting tutor"
     echo "The tutor checks every minute for solved tasks and provides hints."
     echo ""
-    source ./helper.sh
+    source $PROGRAM_PATH_WORKDIR/helper.sh
     #Thanks:
     #https://unix.stackexchange.com/questions/163793/start-a-background-process-from-a-script-and-manage-it-when-the-script-ends
     background_helper &
