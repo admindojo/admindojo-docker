@@ -29,7 +29,7 @@ task_solved_status=0
 
 
                     # Run cmd to solve task
-                    testing_command_error=$(eval "$task_testing_cmd 1>/dev/null"; echo $?)
+                    testing_command_error=$(eval "$task_testing_cmd "; echo $?)
 
                     task_status=$(check_success "$task"; echo $?)
 
