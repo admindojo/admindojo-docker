@@ -60,4 +60,5 @@ chmod u+x *.sh
 install_requirements
 set_path
 
+echo "Setup done!"
 exit $?
