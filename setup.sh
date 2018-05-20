@@ -44,7 +44,6 @@ set_path(){
 
 
     echo "Adding admindojo to your PATH"
-    PROGRAM_PATH_WORKDIR="$(echo ${0%/*})"
     touch ~/.bash_profile
 
     echo "alias admindojo='admindojo.sh'" >> ~/.bash_profile
@@ -57,6 +56,7 @@ set_path(){
 }
 
 chmod u+x *.sh
+source ./admindojo.sh
 install_requirements
 set_path
 
