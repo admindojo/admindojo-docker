@@ -29,15 +29,20 @@ check_live() {
     #Check each task
     for task in "${TASK_LIST_OF_TASK[@]}"
     do
-        check_success "$task"
-        STATUS=$?
+        task_points="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "points")"
+        if [[ $task_points != 0 ]];then
+            check_success "$task"
+            STATUS=$?
+        else
+            STATUS=0
+        fi
 
         let "task_counter++"
 
         task_solved="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "solved")"
         if [ "$task_solved" == "false" ] || [ "$task_solved" == "" ];then
 
-            if [ "$STATUS" == 0 ]; then
+            if [ "$STATUS" == 0 ] && [[ $task_points != 0 ]]; then
                 if [[ "$task_done_in_run" == "0" ]];then
                     echo ""
                     echo -e "${GREEN}You just solved:${NORMAL}"
@@ -54,7 +59,11 @@ check_live() {
                 task_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "title")"
 
                 result_points_got=$(( $result_points_got + $task_points ))
-                echo -e "${GREEN}\t\t$task_title! \t+ $task_points Points${NORMAL}"
+
+                if [[ $task_points != 0 ]];then
+                    echo -e "${GREEN}\t\t$task_title! \t+ $task_points Points${NORMAL}"
+                fi
+
                 let "tasks_done++"
                 task_done_in_run=1
                 task_hintnext="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "hintnext")"
@@ -80,6 +89,7 @@ check_live() {
         echo ""
         crudini --set "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "solved" "true"
         crudini --set "$PLAYER_FILE" "player" "lesson_current" ""
+        crudini --set "$PLAYER_FILE" "local" "helper_pid" ""
         echo "Lesson marked as solved"
         echo ""
         echo "Hit [enter]"

@@ -356,18 +356,31 @@ check_result() {
         result_points_total=$(( $result_points_total + $task_points ))
         task_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "title")"
 
+
         #check with if task is done
-        check_success "$task"
-        STATUS=$?
+        #check only if task != 0 points
+        if [[ $task_points != 0 ]];then
+            check_success "$task"
+            STATUS=$?
+        else
+            STATUS=0
+        fi
 
         if [ "$STATUS" == 0 ]; then
-            echo -e "⏵ $task_title\t${GREEN}   solved ✔${NORMAL}"
 
-            result_points_got=$(( $result_points_got + $task_points ))
+            echo -e "⏵ $task_title"
+            if [[ $task_points != 0 ]];then
+                echo -e "\t${GREEN}   solved ✔${NORMAL}"
+            fi
+                result_points_got=$(( $result_points_got + $task_points ))
+
 
             task_hintnext="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "hintnext")"
         else
-            echo -e "⏵ $task_title\t${RED} unsolved ✘${NORMAL}"
+            echo -e "⏵ $task_title"
+            if [[ $task_points != 0 ]];then
+                echo -e "\t${RED} unsolved ✘${NORMAL}"
+            fi
 
             if [[ "$gamemode" != "tutor" ]]; then
                 hint="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "hint")"
@@ -377,7 +390,9 @@ check_result() {
             fi
             echo -e ""
         fi
-        echo -e "  Points:\t\t\t\t  "$task_points""
+        if [[ $task_points != 0 ]];then
+            echo -e "  Points:\t\t\t\t  "$task_points""
+        fi
         echo "-------------------------"
     done
 
@@ -398,7 +413,6 @@ check_result() {
             echo ""
             crudini --set "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "solved" "true"
             crudini --set "$PLAYER_FILE" "player" "lesson_current" ""
-            crudini --set "$PLAYER_FILE" "local" "helper_pid" ""
             echo "Lesson marked as solved"
             echo ""
             echo ""
