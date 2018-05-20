@@ -398,6 +398,7 @@ check_result() {
             echo ""
             crudini --set "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "solved" "true"
             crudini --set "$PLAYER_FILE" "player" "lesson_current" ""
+            crudini --set "$PLAYER_FILE" "local" "helper_pid" ""
             echo "Lesson marked as solved"
             echo ""
             echo ""
