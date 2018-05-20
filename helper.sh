@@ -2,25 +2,19 @@
 #set -e
 
 
-# @description
+# @description Checks tasks and outputs "task-done"message + hint for next task + final end result.
+# Should be updated since show final result is already done in main file.
 #
-# @example
-#
-#
-#
-# @arg $1
 #
 # @noargs
 #
 #
-# @stdout Path to something.
+# @stdout
 check_live() {
     # Get a fresh array of all tasks in $TASK_LIST_OF_TASK
     get_all_tasks "$(get_current_lesson)"
 
-
     lesson_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "title")"
-    #echo "Lesson: $lesson_title"
 
     result_points_total=""
     result_points_got=""
@@ -35,19 +29,13 @@ check_live() {
     #Check each task
     for task in "${TASK_LIST_OF_TASK[@]}"
     do
-
-
         check_success "$task"
         STATUS=$?
-        #echo ""
 
         let "task_counter++"
 
         task_solved="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "solved")"
         if [ "$task_solved" == "false" ] || [ "$task_solved" == "" ];then
-
-
-
 
             if [ "$STATUS" == 0 ]; then
                 if [[ "$task_done_in_run" == "0" ]];then
@@ -72,23 +60,20 @@ check_live() {
                 task_hintnext="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "hintnext")"
 
             fi
-
-
          else
             let "tasks_done++"
          fi
     let "tasks_total++"
-
-
     done
 
-    #
+    #Output final result if all tasks are done
     if [[ "$tasks_done" == "$tasks_total" ]];then
         echo ""
         echo "You solved all tasks!"
         echo ""
         echo "Lesson complete"
         sleep 2
+        # check result + "tutor" displays a hint for next task
         check_result "tutor"
 
         #mark lesson as solved
@@ -98,6 +83,8 @@ check_live() {
         echo ""
         echo "Hit [enter]"
         echo ""
+
+        #exit the game when lesson is finished
         exit 0
     else
         if [[ "$task_done_in_run" == "1" ]];then
@@ -108,40 +95,28 @@ check_live() {
                 echo ""
                 echo "Next: $task_hintnext"
                 echo ""
-
              fi
 
             echo "Hit [enter]"
             echo ""
         fi
-
-
     fi
-
-    #echo "Tasks total: $tasks_total"
-    #echo "Tasks done: $tasks_done"
-    #echo "Tasks undone: $tasks_undone"
 }
 
 
-
-
-#TEST BACKGRUND HELPER
-# Runs background when lesson is started. Should check the task-status periodically. Notifies user when a task is completed.
+# @description Runs background when lesson is started. Should check the task-status periodically. Notifies user when a task is completed.
 #
+#
+# @noargs
+#
+#
+# @stdout P
 background_helper(){
     while [ true ]
     do
         #check every minute
         sleep 60
         check_live
-
-    #    if [[ -d /home/marvin/check ]];then
-    #        echo "da"
-    #        exit 0
-    #    else
-    #        echo "nicht da"
-    #    fi
     done
 }
 

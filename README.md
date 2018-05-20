@@ -3,19 +3,21 @@
 
 [![Build Status](https://travis-ci.org/admindojo/admindojo.svg?branch=master)](https://travis-ci.org/admindojo/admindojo)
 
-admondojo is a game that helps you to learn linux admin tasks like installing a webserver or updating the system.
-You'll get lessons and tasks to solve and hints on how to solve your taks. 
+admondojo is a game that helps you learning to become familiar with linux admin tasks like installing and configuring a database.
+
+Each lesson contains tasks to solve. Once you're done your setup will get checked. 
+In tutor-mode a backgrund tutor will check your work constantly and provides hints.
+
 
 ## Installation
 
 Requirements:
-- Ubuntu
-- sudo
-- fresh VM
+- freshly installed Ubuntu VM/Container/Server
+- sudo user
 
-Note: Please use this game on a fresh VM, that you can delete later, only. Since you'll modify the system.
+Note: Since you'll modify the system, please run admindojo on an unused system only. You should be able to reinstall/rebuild the system after each lesson.
 
-The setup adds the alias "admondojo" to your .bash_profile to let you run the game with just "admindojo"
+To let you run the admindojo by just typing `admindojo` the setup adds an alias to your .bash_profile.
 ```sh
 git clone https://github.com/admondojo/admindojo.git
 cd admondojo
@@ -24,71 +26,67 @@ admindojo
 ```
 
 ## Usage
+type `admindojo`
 ```
- admindojo
+ >admindojo
 
- Start the game
-    start   (list, select and start lessons)
+ Start the training
+    admindojo start   (list, select and start lessons)
 
  In-game control
-    tasks   (show tasks)
-    end     (end game, show restult)
+    admindojo tasks   (show tasks)
+    admindojo end     (end game, show restult)
 
  Tutor mode:
  Guides you through your lesson. Checks every minute if you solved a task and shows hints.
-    tutor   (start tutor)
+    admindojo tutor   (start tutor)
 ```
 
 Select your lesson:
+`admindojo start`
 
 ![Select your lesson](./documentation/screenshot_input.png)
 
 View your tasks:
+`admindojo tasks`
 
 ![View your tasks](./documentation/screenshot_tasks.png)
 
 ## Interactive tutor mode
-Starts a background tutor that checks your tasks and shows hints while playing.
+`admindojo tutor`
 ![Get your result](./documentation/screenshot_result.png)
 
 
-## Development setup
+
+
+## Meta
+
+Initial work:
+- Marvin Heimbrodt – [@6uhrmittag](https://twitter.com/6uhrmittag) – marvin@6uhrmittag.de
+
+Distributed under the MIT license. See ``LICENSE`` for more information.
+
+## Contributing
+
+Feedback and contribution is highly appreciated! 
+
+The project is in a very early stage and so is the contribution setup. Please get in touch via github issue.
+
+### Development setup
 
 To run a test for all lessons run `./admindojo.sh testing`. 
-Run this on a fresh VM/CI only. Testing mode installs/executes all lesson tasks.
+Run this on a fresh VM/CI only! ***Testing mode installs/executes all lesson tasks.***
 
-generate documentation:
+#### generate documentation
+Install [shdoc](https://github.com/reconquest/shdoc) first
 ```sh
 make doku
 ```
 
-## Meta
-
-Marvin Heimbrodt – [@6uhrmittag](https://twitter.com/6uhrmittag) – marvin@6uhrmittag.de
-
-(***TODO***) Distributed under the XYZ license. See ``LICENSE`` for more information.
-
-[https://slashlog.de/](slashlog.de)
-
-## Contributing
-
-1. Fork it (<https://github.com/admindojo/admindojo/fork>)
-2. Create your feature branch (`git checkout -b feature/fooBar`)
-3. Commit your changes (`git commit -am 'Add some fooBar'`)
-4. Push to the branch (`git push origin feature/fooBar`)
-5. Create a new Pull Request
-
-## Add lessons
-
-1. Fork it (<https://github.com/admindojo/admindojo/fork>)
-2. Create your lesson branch (`git checkout -b lesson/fooBar`)
-3. Add your lesson using the template
-4. Please make sure all tasks are solvable! (Travis should be able to check the "test" sections)
-5. Commit your changes (`git commit -am 'Add some fooBar'`)
-6. Push to the branch (`git push origin lesson/fooBar`)
-7. Create a new Pull Request
-
 ## Acknowledgments
+Following texts, tools insipred or helped the development:
 
 * [Lynis - Security auditing tool](https://github.com/CISOfy/lynis) - inspired the game mode
 * [shdoc - Documentation generator for shell scripts](https://github.com/reconquest/shdoc) - used for documentation
+* [Google Shell Style Guide](https://google.github.io/styleguide/shell.xml#Function_Names) - helped to improve code
+* [ShellCheck - finds bugs in your shell scripts](https://google.github.io/styleguide/shell.xml#Function_Names) - awesome shell linter

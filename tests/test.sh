@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#
 
 # Test each lesson
 # Test only tasks that contain "test" commands
@@ -14,13 +13,10 @@ task_solved_status=0
         LESSON_FOLDER=$(echo $FOLDER )
         LESSON_PATH="$PROGRAM_PATH_LESSONS/$LESSON_FOLDER"
 
-
         lesson_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "title")"
         echo -e "TEST LESSON: $lesson_title"
 
         get_all_tasks $FOLDER
-
-
             for task in "${TASK_LIST_OF_TASK[@]}"
             do
                 # Only test auto-testable tasks
@@ -33,7 +29,6 @@ task_solved_status=0
 
 
                     # Run cmd to solve task
-                    #eval "$task_testing_cmd 1>/dev/null"
                     testing_command_error=$(eval "$task_testing_cmd 1>/dev/null"; echo $?)
 
                     task_status=$(check_success "$task"; echo $?)
@@ -59,10 +54,7 @@ task_solved_status=0
 
                     echo -e "\t\tTest command: $task_testingcmd_status"
                     echo -e "\t\tTask solved : $task_testing_status"
-
-
                 fi
-
             done
          if [[ "$task_solved_status" == "1" ]]; then
             echo -e "${RED}Solved Check failed: $LESSON_PATH${NORMAL}"
@@ -70,7 +62,6 @@ task_solved_status=0
          if [[ "$testing_command_error" != "0" ]]; then
             echo -e "${RED}Testing command failed: $LESSON_PATH${NORMAL}"
          fi
-
 
         echo ""
     done

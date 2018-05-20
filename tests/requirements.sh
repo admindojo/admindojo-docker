@@ -19,10 +19,6 @@ install(){
     set -e
 }
 
-
-
-
-
 install_requirements() {
     echo ""
     echo "------------------   INSTALL REQUIREMENTS START   ------------------"

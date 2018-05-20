@@ -1,19 +1,12 @@
 #!/usr/bin/env bash
 #set -e
 
-
-#requirement
-#curl
-#wget
-
-#setup
-
-
-# Font colors
+# Set font colors
 RED="$(printf '\033[1;31m')"
 GREEN="$(printf '\033[1;32m')"
 NORMAL="$(printf '\033[0m')"
 
+#---------------------------- FUNCTIONS START ------------------------------------------------------------------------------------
 
 # @description Setup. Sets up common variables with paths and filenames
 # there
@@ -23,14 +16,15 @@ NORMAL="$(printf '\033[0m')"
 #
 # @noargs
 setup() {
+    #Filenames
     FOLDER_LESSONS="lessons"
     LESSONS_FILENAME_TASKS="tasks.ini"
     LESSONS_FILENAME_META="meta.ini"
 
+    #Paths
     PROGRAM_FILENAME="$(echo ${0##*/})"
     PROGRAM_PATH_FULL="$(readlink -f "$PROGRAM_FILENAME")"
     PROGRAM_PATH_WORKDIR="$(echo ${0%/*})"
-    #echo $PROGRAM_PATH_WORKDIR
     PROGRAM_PATH_LESSONS="$PROGRAM_PATH_WORKDIR/$FOLDER_LESSONS"
     PLAYER_FILE="$PROGRAM_PATH_WORKDIR/player/player.ini"
 }
@@ -118,7 +112,7 @@ list_all_lessons() {
      done
 }
 
-# @description Outputs full info of lesson
+# @description Outputs full info of given lesson
 #
 # @example
 #   show_tasks lesson_current
@@ -130,15 +124,12 @@ list_all_lessons() {
 # @stdout Full lesson info. Title + Tasks
 #
 show_tasks() {
-    # Get a fresh array of all tasks in $TASK_LIST_OF_TASK
 
     LESSON_FOLDER="$1"
-
+    # Get a fresh array of all tasks in $TASK_LIST_OF_TASK
     get_all_tasks "$LESSON_FOLDER"
 
-
     lesson_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "title")"
-
     lesson_author="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "author")"
     lesson_website="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "website")"
 
@@ -146,7 +137,12 @@ show_tasks() {
     echo "######################################################"
     echo "      Lesson: $lesson_title"
     echo ""
-    echo -e "         by: "$lesson_author" url: "$lesson_website""
+    echo -e "  by: "$lesson_author"\n"
+
+    if [ -n "$lesson_website" ]; then
+        echo -e "# website: "$lesson_website"\n"
+    fi
+
     #echo -e
     echo "######################################################"
     echo ""
@@ -159,27 +155,29 @@ show_tasks() {
         task_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "title")"
         task_desc="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "desc")"
 
+        #task - title
         echo ""
-        #echo "-----------"
         echo -e "⏵ $task_title"
 
+        #task - description
         if [ -n "$task_desc" ]; then
             echo -e "\tDescription: $task_desc"
         fi
 
-        why="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "why")"
-        if [ -n "$why" ]; then
-            echo -e "\tWhy: $why"
+        #task - why
+        task_why="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "why")"
+        if [ -n "$task_why" ]; then
+            echo -e "\tWhy: $task_why"
         fi
-
-
     done
 
     echo ""
-    lesson_note="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "title")"
 
-    echo "Note: $lesson_note"
-    echo ""
+    lesson_note="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "title")"
+    if [ -n "$lesson_note" ]; then
+        echo "Note: $lesson_note"
+        echo ""
+    fi
     echo ""
 }
 
@@ -194,13 +192,13 @@ lesson_reset() {
     # Get a fresh array of all tasks in $TASK_LIST_OF_TASK
     get_all_tasks "$(get_current_lesson)"
 
-    #Check each task
+    #reset tasks
     for task in "${TASK_LIST_OF_TASK[@]}"
     do
         crudini --set "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "solved" "false"
-        crudini --set "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "solved" "false"
     done
-
+    # reset meta
+    crudini --set "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "solved" "false"
 }
 
 
@@ -218,18 +216,13 @@ lesson_reset() {
 check_success() {
     check_task="$1"
     cmd="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$check_task" "cmd")"
-    task_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$check_task" "title")"
-    #echo "$desc:"
 
+    #run the cmd and save exit code
     task_status=$(eval "$cmd")
-    #echo $cmd
-    #echo $task_status
-
 
     # "ok" for if-checks
     # "OK" for http status
     # 0 for exit code
-
     if [[ "$task_status" == "ok" ]] || [[ "$task_status" = *"OK"* ]] || [[ "$task_status" == "0" ]]; then
             #echo "ok"
             return 0
@@ -237,10 +230,9 @@ check_success() {
             #echo "fail"
             return 1
         fi
-
 }
 
-# @description Returns current lesson from player.ini. Returns $LESSON_CURRENT
+# @description Returns current lesson from player.ini. Returns $LESSON_CURRENT (String)
 #
 # @example get_all_tasks $(get_current_lesson)
 #
@@ -250,7 +242,7 @@ get_current_lesson() {
     echo "$LESSON_CURRENT"
 }
 
-# @description Writes current lesson to player.ini. Writes foldername of lesson.
+# @description Writes current lesson(string) to player.ini. string=foldername of lesson
 #
 # @example
 #   set_current_lesson 1
@@ -272,7 +264,7 @@ set_current_lesson() {
 return 1
 }
 
-# @description Receives lesson number from terminal input. Returns Lesson number
+# @description Receives lesson number from terminal input. Returns Lesson number. Doesn't list all lesons.
 #
 # @example
 #   input_lesson_number
@@ -288,7 +280,7 @@ input_lesson_number() {
 
     read LESSON_CURRENT_NUMBER
         while [[ "$LESSON_CURRENT_NUMBER" -lt 0 || "$LESSON_CURRENT_NUMBER" -gt 9999 ]]; do
-            echo "Numbers only"
+            echo "Please input numbers only"
             read LESSON_CURRENT_NUMBER
         done
     return "$LESSON_CURRENT_NUMBER"
@@ -304,7 +296,6 @@ input_lesson_number() {
 get_all_tasks() {
 
     LESSON_FOLDER=$1
-
     LESSON_PATH=$PROGRAM_PATH_LESSONS/$LESSON_FOLDER
 
     tasks="$(eval crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" | tr '\n' ' ')"
@@ -314,7 +305,7 @@ get_all_tasks() {
     return 0
 }
 
-# @description Asks player to choose a lesson. Lists lessons and waits for input.
+# @description Asks player to choose a lesson. Lists lessons, waits for input, saves input as current lesson
 #
 # @example input
 #
@@ -328,11 +319,7 @@ input() {
     input_lesson_number
     lesson_number="$?"
 
-    #lesson_status=$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "solved")
-    #echo "$lesson_status"
-
     set_current_lesson "$lesson_number"
-
 }
 
 # @description Outputs full result with status, points and hints
@@ -340,19 +327,17 @@ input() {
 # @example
 #
 #
-# @noargs
+# @arg optional: gamemode (tutor)
 #
 #
 # @stdout Full lesson status
 check_result() {
 
+    #optional. for tutor mode only
     gamemode="$1"
-
-    #get_current_lesson
 
     # Get a fresh array of all tasks in $TASK_LIST_OF_TASK
     get_all_tasks "$(get_current_lesson)"
-
 
     lesson_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "title")"
     echo ""
@@ -360,47 +345,41 @@ check_result() {
     echo ""
     echo "Your result:"
 
+    #reset score
     result_points_total=""
     result_points_got=""
 
     #Check each task
     for task in "${TASK_LIST_OF_TASK[@]}"
     do
-
         #Get points for task
         task_points="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "points")"
         result_points_total=$(( $result_points_total + $task_points ))
         task_title="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "title")"
+
+        #check with if task is done
         check_success "$task"
         STATUS=$?
-        #echo ""
+
         if [ "$STATUS" == 0 ]; then
-
             echo -e "⏵ $task_title\t${GREEN}   solved ✔${NORMAL}"
-
-
 
             result_points_got=$(( $result_points_got + $task_points ))
 
             task_hintnext="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "hintnext")"
-
         else
             echo -e "⏵ $task_title\t${RED} unsolved ✘${NORMAL}"
 
             if [[ "$gamemode" != "tutor" ]]; then
-
                 hint="$(crudini --get "$LESSON_PATH/$LESSONS_FILENAME_TASKS" "$task" "hint")"
                 if [ -n "$hint" ]; then
                     echo -e "🔎Hint: \t $hint"
                 fi
             fi
-
             echo -e ""
         fi
-        #echo ""
         echo -e "  Points:\t\t\t\t  "$task_points""
         echo "-------------------------"
-
     done
 
     echo ""
@@ -408,9 +387,8 @@ check_result() {
     echo -e "  Your Points :\t\t\t          $result_points_got"
     echo ""
 
-
-
     if [ ! "$gamemode" == "tutor" ] && [[ "$result_points_got" == "$result_points_total" ]];then
+            #if all solved and gamode != tutor
             echo ""
             echo "You solved all tasks!"
             echo ""
@@ -426,28 +404,105 @@ check_result() {
             exit 0
     else
          if [ "$gamemode" == "tutor" ] && [ ! "$task_hintnext" == "" ]; then
+            #Show tutor hint if existing
             echo ""
             echo "🔎 $task_hintnext"
             echo ""
          fi
-
     fi
     echo ""
-
 }
 
+#---------------------------- FUNCTIONS END ------------------------------------------------------------------------------------
 
 
 
+# refresh filesnames and paths in any case
 setup
 
 
+# Show help
+if [ "$1" == "help" ] || [ "$1" == "-?" ] || [ "$1" == "--help" ] || [ "$1" == "" ]; then
+echo " admindojo"
+echo ""
+echo " Start the Training"
+echo "    admindojo start   (list, select and start lesson)"
+echo ""
+echo " In-game control"
+echo "    admindojo tasks   (show tasks)"
+echo "    admindojo end     (end game, show result)"
+echo ""
+echo " Tutor mode:"
+echo " Guides you through your lesson. Checks every minute if you solved a task and shows hints."
+echo "    admindojo tutor   (start tutor)"
+echo ""
+echo ""
+    exit 0
+fi
+
+
+
+# List all available lessons
+if [ "$1" == "lessons" ]; then
+    list_all_lessons
+    exit 0
+fi
+
+# List all current tasks
+if [ "$1" == "tasks" ]; then
+    LESSON_FOLDER="$(crudini --get "$PLAYER_FILE" "player" "lesson_current")"
+    show_tasks "$LESSON_FOLDER"
+    exit 0
+fi
+
+
+if [ "$1" == "start" ]; then
+    input
+    show_tasks "$(get_current_lesson)"
+    exit $?
+fi
+
+if [ "$1" == "end" ]; then
+    check_result
+    exit 0
+fi
+
+
+if [ "$1" == "tutor" ]; then
+    echo "Starting tutor"
+    echo "The tutor checks every minute for solved tasks and provides hints."
+    echo ""
+    source ./helper.sh
+    #Thanks:
+    #https://unix.stackexchange.com/questions/163793/start-a-background-process-from-a-script-and-manage-it-when-the-script-ends
+    background_helper &
+    # Storing the background process' PID.
+    bg_pid=$!
+
+    # To kill helper manually use PID from player.ini and "kill -15 PID"
+    # Trapping SIGKILLs so we can send them back to $bg_pid.
+    trap "kill -15 $bg_pid" 2 15
+
+    crudini --set "$PLAYER_FILE" "local" "helper_pid" "$bg_pid"
+    #echo "PID: $bg_pid"
+
+    show_tasks $(get_current_lesson)
+fi
 
 
 
 
+# ------ advanced/not for user
+
+# reset status of current lesson
+if [ "$1" == "reset" ]; then
+    lesson_reset
+    exit 0
+fi
 
 
+
+# To invoke testing only! NOT FOR GAMEPLAY
 if [ "$1" == "testing" ]; then
     set -e # Exit with nonzero exit code if anything fails
 
@@ -462,90 +517,4 @@ if [ "$1" == "testing" ]; then
     echo ""
     echo "------------------   TEST END    ------------------"
     echo ""
-fi
-
-if [ "$1" == "tasks" ]; then
-    LESSON_FOLDER="$(crudini --get "$PLAYER_FILE" "player" "lesson_current")"
-    show_tasks "$LESSON_FOLDER"
-    exit 0
-fi
-
-if [ "$1" == "lessons" ]; then
-    list_all_lessons
-    exit 0
-fi
-
-if [ "$1" == "help" ] || [ "$1" == "-?" ] || [ "$1" == "--help" ] || [ "$1" == "" ]; then
-
-
-echo " admindojo"
-echo ""
-echo " Start the Training"
-echo "    start   (list, select and start lesson)"
-echo ""
-echo " In-game control"
-echo "    tasks   (show tasks)"
-echo "    end     (end game, show result)"
-echo ""
-echo " Tutor mode:"
-echo " Guides you through your lesson. Checks every minute if you solved a task and shows hints."
-echo "    tutor   (start tutor)"
-echo ""
-echo ""
-
-#    echo -e "\n\n\n"
-#    echo ""
-#    echo -e "admingame lessons: Lists available lessons.\n"
-#    echo -e "admingame start: Lists lessons, let you choose a lesson and starts the game.\n"
-#    echo -e "admingame tasks: Lists all tasks.\n"
-#    echo -e "admingame end: Checks your work and shows the result.\n"
-#    echo -e "admingame tutor: Starts the game in tutor mode. Checks every minute if you solved a task and shows hints.\n"
-#    echo ""
-#
-#    echo ""
-#    echo -e "Lists available lessonsadmingame lessons\n"
-#    echo -e "Lists lessons, let you choose a lesson and starts the game_ admingame start: \n"
-#    echo -e "Lists all tasks: admingame tasks: \n"
-#    echo -e "Checks your work and shows the result.: admingame end: \n"
-#    echo -e ": admingame tutor: \n"
-#    echo ""
-
-    exit 0
-fi
-
-if [ "$1" == "reset" ]; then
-    lesson_reset
-    exit 0
-fi
-
-if [ "$1" == "end" ]; then
-    check_result
-    exit 0
-fi
-
-if [ "$1" == "start" ]; then
-    input
-    show_tasks "$(get_current_lesson)"
-    exit $?
-fi
-
-if [ "$1" == "tutor" ]; then
-    echo "Starting tutor"
-    echo "The tutor checks every minute for solved tasks and provides hints."
-    echo ""
-    source ./helper.sh
-
-    background_helper &
-    # Storing the background process' PID.
-    bg_pid=$!
-
-    # Trapping SIGKILLs so we can send them back to $bg_pid.
-    trap "kill -15 $bg_pid" 2 15
-
-    crudini --set "$PLAYER_FILE" "local" "helper_pid" "$bg_pid"
-    #echo "PID: $bg_pid"
-
-    #echo ""
-    show_tasks $(get_current_lesson)
-
 fi

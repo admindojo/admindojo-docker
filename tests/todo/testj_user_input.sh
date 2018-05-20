@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. ../helper.sh
+. ../../helper.sh
 
 test_add() {
     actual=$(input 1)
