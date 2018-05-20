@@ -11,7 +11,7 @@ install(){
         printf " (skipped, already installed)\n"
     else
 
-        sudo apt-get install -y "$1" > /dev/null
+        sudo apt-get install -y "$1" &> /dev/null
         printf " (installed)\n"
         # Check if error
         if [[ $? != 0 ]]; then
@@ -39,14 +39,17 @@ install_requirements() {
 }
 
 set_path(){
-PROGRAM_PATH_WORKDIR="$(echo ${0%/*})"
-touch ~/.bash_profile
 
-echo "alias admindojo='admindojo.sh'" >> ~/.bash_profile
 
-echo 'export PATH=$PATH:$PROGRAM_PATH_WORKDIR'  >> ~/.bash_profile
+    echo "Adding admindojo to your PATH"
+    PROGRAM_PATH_WORKDIR="$(echo ${0%/*})"
+    touch "~/.bash_profile"
 
-source "~/.bash_profile"
+    echo "alias admindojo='admindojo.sh'" >> ~/.bash_profile
+
+    echo 'export PATH=$PATH:$PROGRAM_PATH_WORKDIR'  >> ~/.bash_profile
+
+    source "~/.bash_profile"
 
 
 }
