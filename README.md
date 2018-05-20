@@ -25,6 +25,12 @@ sudo ./setup.sh
 admindojo
 ```
 
+## Quick-Start
+1. Type `admindojo start`
+2. Choose a lesson
+3. solve all listed tasks (type `admindojo tasks` to see them again)
+4. type `admindojo end` to check if you solved all tasks properly
+
 ## Usage
 type `admindojo`
 ```
