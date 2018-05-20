@@ -202,8 +202,6 @@ lesson_reset() {
 }
 
 
-
-
 # @description Checks task status with help of "cmd" command in task.ini.
 #
 # @example check_success task1
@@ -399,6 +397,7 @@ check_result() {
             #mark lesson as solved
             echo ""
             crudini --set "$LESSON_PATH/$LESSONS_FILENAME_META" "lesson" "solved" "true"
+            crudini --set "$PLAYER_FILE" "player" "lesson_current" ""
             echo "Lesson marked as solved"
             echo ""
             echo ""
