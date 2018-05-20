@@ -423,6 +423,7 @@ setup
 
 # Show help
 if [ "$1" == "help" ] || [ "$1" == "-?" ] || [ "$1" == "--help" ] || [ "$1" == "" ]; then
+echo ""
 echo " admindojo"
 echo ""
 echo " Start the Training"
