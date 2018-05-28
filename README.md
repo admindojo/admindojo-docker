@@ -25,6 +25,7 @@ sudo ./setup.sh
 admindojo
 ```
 
+
 ## Quick-Start
 1. Type `admindojo start`
 2. Choose a lesson
@@ -63,15 +64,6 @@ View your tasks:
 
 ![Get your result](https://github.com/admindojo/admindojo/raw/master/documentation/screenshot_result.png)
 
-
-
-
-## Meta
-
-Initial work:
-- Marvin Heimbrodt – [@6uhrmittag](https://twitter.com/6uhrmittag) – marvin@6uhrmittag.de
-
-Distributed under the MIT license. See ``LICENSE`` for more information.
 
 ## Contributing
 
@@ -118,6 +110,13 @@ Install [shdoc](https://github.com/reconquest/shdoc) first
 ```sh
 make doku
 ```
+
+## Meta
+
+Initial work:
+- Marvin Heimbrodt – [@6uhrmittag](https://twitter.com/6uhrmittag) – marvin@6uhrmittag.de
+
+Distributed under the MIT license. See ``LICENSE`` for more information.
 
 ## Acknowledgments
 Following texts, tools insipred or helped the development:
