@@ -51,17 +51,17 @@ type `admindojo`
 Select your lesson:
 `admindojo start`
 
-![Select your lesson](./documentation/screenshot_input.png)
+![Select your lesson](https://github.com/admindojo/admindojo/raw/master/documentation/screenshot_input.png)
 
 View your tasks:
 `admindojo tasks`
 
-![View your tasks](./documentation/screenshot_tasks.png)
+![View your tasks](https://github.com/admindojo/admindojo/raw/master/documentation/screenshot_tasks.png)
 
 ## Interactive tutor mode
 `admindojo tutor`
 
-![Get your result](./documentation/screenshot_result.png)
+![Get your result](https://github.com/admindojo/admindojo/raw/master/documentation/screenshot_result.png)
 
 
 
