@@ -11,6 +11,7 @@ In tutor-mode a background tutor will check your work constantly and provides hi
 
 ## Installation
 
+### On your own VM/Server
 Requirements:
 - freshly installed Ubuntu VM/Container/Server
 - sudo user
@@ -25,6 +26,15 @@ sudo ./setup.sh
 admindojo
 ```
 
+### Hassle free docker image
+
+To use admindojo in a ready to use docker container, just `docker pull admindojo/admindojo`. The image contains the latest, ready to use, version of admindojo.
+The container includes an SSH-Server. 
+
+Just SSH to it:
+- username: `sysadmin`
+- password: `password`
+- port: `22`
 
 ## Quick-Start
 1. Type `admindojo start`
